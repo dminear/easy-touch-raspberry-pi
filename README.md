@@ -9,6 +9,6 @@ I have also bought a LinkSprite RS485/GPIO Shield for Raspberry Pi which will be
 
 I have a wireless Easy-Touch system, but it got some corrosion on the Menu button (the most important one) and stopped responding to any keypress. I called Pentair and they do not service the unit. They suggested I purchase a new one which runs about $500 for the controller and $125 for the receiver.
 
-I figured with $40 for the Raspberry Pi + $12 for the RS-485 controller + a book Getting Started with Raspberry Pi (Make Magazine publisher) I would be out ahead.
+I figured with $40 for the Raspberry Pi + $12 for the [RS-485 controller](https://www.sparkfun.com/products/12826) + a book Getting Started with Raspberry Pi [Make Magazine publisher](http://www.amazon.com/Getting-Started-Raspberry-Pi-Make/dp/1449344216/ref=sr_1_1?ie=UTF8&qid=1401780695&sr=8-1&keywords=getting+started+with+raspberry+pi) I would be out ahead.
 
 Here's a [close up](images/pi-close.jpg) with the RS-485 board plugged in, and a [pull back](images/pi-all.jpg) of the local development environment on my kitchen counter.
