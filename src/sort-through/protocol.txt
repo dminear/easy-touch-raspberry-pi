@@ -1,0 +1,615 @@
+From http://forum.cinemaronline.com/viewtopic.php?p=89446
+See also MisterHouse code mh/lib/Compool.pm
+
+   The basic control packet allows the third party controller to
+- Toggle On/Off state of the Spa, Pool, Aux 1 - 7.
+- Enable or disable the Spa side remote(s).
+- Cancel any current circuit delays (not recommended).
+- Change/select heat source/method for Spa or Pool.
+- Change/set desired temperature for Spa and/or Pool.
+- Control Dimmers, (if unit has dimmers installed).
+- Change/set the current time of day in LX3xxx control units clock.
+
+    The basic acknowledge packet allows the third party to determine
+- Current state of Spa, Pool, Aux 1 - 7.
+- Current state of Heater and Solar for both Spa and Pool.
+- Whether LX3xxx is in Service mode (no commands should be sent).
+- Current state of Spa side remotes (enabled or not).
+- Current heat source selection.
+- Solar presence.
+- Freeze protection mode.
+- Current water and solar temperature for Spa and Pool.
+- Desired/set temperature for Spa and Pool.
+- Air Temperature (Freeze sensor, not intended offer an accurate )
+                  (air temperature                               )
+- Status of temperature sensors.
+- Current time of day stored in LX3xxx unit.
+
+
+
+
+--------------------------------------------------------------------------
+Hardware Interface:
+--------------------------------------------------------------------------
+    The hardware interface is a simple half duplex RS-485 differential 
+pair. Any external add-on control units are responsible for all special 
+operations required. The hardware interface is terminated with a 
+non-standard 1000 ohm resistor. Since an adapter is required to configure 
+an interface to Compools RJ45 type cable connector, it is suggested that a 
+1000 ohm resistor be added there, and any termination on the interface be 
+disabled.
+
+    The external control unit MUST be treated as a LISTEN mode slave. It 
+should only drive the cable in transmit mode when required, and return to
+receive mode immediately. Also to prevent unnecessary collision, the 
+external controller must check the line to be certain it is free before
+beginning transmission.
+
+The serial interface must be configured as shown below.
+
+Baud Rate:     9600 bps
+Start Bits:    1
+Data Bits:     8
+Stop Bits:     1
+Parity:        None
+
+
+RJ45 Pin 1     DC/Reference ground
+RJ45 Pin 2     DC/Unregulated 10 VDC  ~100ma Max.
+RJ45 Pin 3     +Data (RS485 Tx & Rx)
+RJ45 Pin 4     -Data (RS485 Tx & Rx)
+RJ45 Pin 5     DC/Unregulated 10 VDC  ~100ma Max.
+RJ45 Pin 6     DC/Reference ground
+
+The ~100ma Max. refers to the max load the Compool unit can source.
+If the interface supplies it's own power this is not an issue.
+
+
+     ----------
+    |          |
+    |   ----   |  <-- RJ45 cable end shown with locking tab on top
+    |   |  |   |
+    |   |  |   |
+    |   ----   |
+    |          |
+    ------------
+     | 654321 |  <-- pin umber asignments
+     |        |
+     |        | <----- flat cable
+
+
+
+
+
+--------------------------------------------------------------------------
+Basic Command Packet: (Sent from controller to LX3xxx Unit)
+--------------------------------------------------------------------------
+
+Byte 0    SYNC BYTE 0         0xFFh (always)
+Byte 1    SYNC BYTE 1         0xAAh (always)
+Byte 2    Destination Address 0x00h (always)
+Byte 3    Source Address      0x01h (always)
+Byte 4    OpCode              0x82h (always)
+Byte 5    Info Field Length   0x09h (always)
+Byte 6    Minutes             0x00h - 0x3Bh (see definitions)
+Byte 7    Hours               0x00h - 0x17h (see definitions)
+Byte 8    Primary Equipment   0x??h (see definitions)
+Byte 9    Secondary Equipment 0x??h (see definitions)
+Byte 10   Heat Source         0x?0h (see definitions)
+Byte 11   Desired Pool Temp   0x??h (see definitions)
+Byte 12   Desired Spa Temp    0x??h (see definitions)
+Byte 13   Switch State        0x??h (see definitions)
+Byte 14   Byte Use enable     0x??h (see definitions)
+Byte 15   Hi Byte of Checksum 0x??h (see definitions)
+Byte 16   Lo Byte of Checksum 0x??h (see definitions)
+
+
+--------------------------------------------------------------------------
+Byte Definitions:
+--------------------------------------------------------------------------
+
+Minutes: (Byte 6)  (Change minutes value)
+0 - 59 / 0x00h - 0x3Bh   Used to set the real time clock in the LX3xxx.
+Note: Bit 0 of 'Byte Use Enable' (Byte 14) must be set, or this info is  
+      ignored.
+
+***************************************************************************
+
+Hours  : (Byte 7)  (Change Hours value)
+0 - 23 / 0x00h - 0x17h   Used to set the real time clock in the LX3xxx.
+Note: Bit 1 of 'Byte Use Enable' (Byte 14) must be set, or this info is  
+      ignored.
+
+***************************************************************************
+
+
+
+***************************************************************************
+Primary Equipment: (Byte 8)  (Change Primary Equipment)
+
+                  3x00/3830  3810   3820
+Bit 0     Toggle    Spa      High   Aux1    1 = Toggle State  (On  / Off )
+Bit 1     Toggle    Pool     Low    Aux2    1 = Toggle State  (On  / Off )
+Bit 2     Toggle    Aux1     Aux1   Aux3    1 = Toggle State  (On  / Off )
+Bit 3     Toggle    Aux2     Aux2   Aux4    1 = Toggle State  (On  / Off )
+Bit 4     Toggle    Aux3     Aux3   Aux5    1 = Toggle State  (On  / Off )
+Bit 5     Toggle    Aux4     Aux4   Aux6    1 = Toggle State  (On  / Off )
+Bit 6     Toggle    Aux5     Aux5   Aux7    1 = Toggle State  (On  / Off )
+Bit 7     Toggle    Aux6     Aux6   Aux8    1 = Toggle State  (On  / Off )
+
+Notes: Bit 2 of 'Byte Use Enable' (Byte 14) must be set, or this info is
+       ignored.
+
+       Bit 5     Aux4 Toggle    (Not Available on 3400)
+       Bit 6     Aux5 Toggle    (Not Available on 3400)
+       Bit 7     Aux6 Toggle    (Not Available on 3400 or 3600)
+
+       Also since the 3810 is a single body, dual temperature controller
+       rather than having a Spa and Pool ciruit it has a High temperature
+       and a low temperature circuit. Bit 0 (normally the Spa) is the
+       High temperature, and Bit 1 (normally the Pool) is the Low
+       temperature.
+
+***************************************************************************
+
+Secondary Equipment: (Byte 9)   (Change Secondary equipment)
+Bit 0     Remotes Toggle 1 = Toggle Spa Side Remote Enable (On / Off)
+Bit 1     C/F Toggle     1 = Toggle Degrees C/F Display
+                         (this only effects the way the Cpxxxx panel )
+                         (will display the temperature, the data is  )
+                         (always handled in degrees C, as described  )
+Bit 2     Delay Cancel   1 = Cancel ANY/ALL Current delays
+Bit 3     Spare
+Bit 4     Aux7 Toggle    1 = Toggle Aux7 State  (On / Off)
+Bit 5     Spare
+Bit 6     Spare
+Bit 7     Spare
+
+Notes: Bit 3 of 'Byte Use Enable' (Byte 14) must be set, or this info is  
+       ignored. Except Aux7 Toggle requires that Bit 2 of 'Byte Use Enable'
+       be set.
+
+       Bit 4     Aux7 Toggle    (Not Available on 3400 or 3600), also
+                 this will not function if the circuit is configured as 
+                 a Backwash.
+
+***************************************************************************
+
+
+***************************************************************************
+Heat Source: (Byte 10)  (Change Heat Source)
+Bits 0 -3 are always 0(zero).
+Bit 4     Pool Lo Bit    (see table)  (Low temperature setting on the  )
+Bit 5     Pool Hi Bit    (see table)  (3810 controller                 )
+Bit 6     Spa Lo Bit     (see table)  (High temperature setting on the )
+Bit 7     Spa Hi Bit     (see table)  (3810 controller                 )
+
+---------
+|Hi |Lo |
+|Bit|Bit|
+------------------------------------------------------------------------
+| 0 | 0 | Heat Source OFF (no heating allowed)                         |
+| 0 | 1 | Heater ON (Pool will also use Solar if available)            |
+| 1 | 0 | Solar Priority ON (If Solar is not available,heater is used) |
+| 1 | 1 | Solar Only ON (If Solar is not available,no heating is used) |
+------------------------------------------------------------------------
+
+Notes: Bit 4 of 'Byte Use Enable' (Byte 14) must be set, or this info is
+       ignored.
+
+       This byte has is not used with the 3820.
+
+***************************************************************************
+
+Desired Pool Temp: (Byte 11)  (Change Desired Pool Temp)
+This Byte sets the Desired Control temperature of the Pool water. The
+value is given in 0.25 degrees C. Conversion of degrees F to Degrees C
+must be done by the control unit sending the data. For example if
+the desired temperature of the Pool is 20 degrees C / 68 degrees F.
+The value would be set to 80 (0x50h).
+
+Notes: Bit 5 of 'Byte Use Enable' (Byte 14) must be set, or this info is
+       ignored.
+
+       If this is a 3810 controller this is the desired low temperature
+       setting.
+
+       This byte is not used by the 3820.
+
+***************************************************************************
+
+Desired Spa Temp: (Byte 12)  (Change Desired Spa Temp)
+This Byte sets the Desired Control temperature of the Spa water. The
+value is given in 0.25 degrees C. Conversion of degrees F to Degrees C
+must be done by the control unit sending the data. For example if
+the desired temperature of the Spa is 40 degrees C / 104 degrees F.
+The value would be set to 160 (0xA0h).
+
+Notes: Bit 6 of 'Byte Use Enable' (Byte 14) must be set, or this info is
+       ignored.
+
+       If this is a 3810 controller this is the desired High temperature
+       setting.
+
+       This byte is not used by the 3820.
+
+***************************************************************************
+
+
+***************************************************************************
+
+Switch State: (Byte 13)  (Dimmer Control)
+
+                  3x00/3830  3810   3820
+Bit 0     Switch    Spa      High   Aux1    1 = Switch Pressed
+Bit 1     Switch    Pool     Low    Aux2    1 = Switch Pressed
+Bit 2     Switch    Aux1     Aux1   Aux3    1 = Switch Pressed
+Bit 3     Switch    Aux2     Aux2   Aux4    1 = Switch Pressed
+Bit 4     Switch    Aux3     Aux3   Aux5    1 = Switch Pressed
+Bit 5     Switch    Aux4     Aux4   Aux6    1 = Switch Pressed
+Bit 6     Switch    Aux5     Aux5   Aux7    1 = Switch Pressed
+Bit 7     Switch    Aux6     Aux6   Aux8    1 = Switch Pressed
+
+Notes: Bit 7 of 'Byte Use Enable' (Byte 14) must be set, or this info is
+       ignored.  This byte is currently only used to control the dimmers.
+       So only Bit 4 and Bit 5 are significant.
+
+***************************************************************************
+
+Byte Use Enable: (Byte 14)  (Enable Active Control Bytes)
+bit 0   1 = Use Byte 6  (Minutes)
+bit 1   1 = Use Byte 7  (Hours)
+bit 2   1 = Use Byte 8  (Primary Equip State)
+bit 3   1 = Use Byte 9  (Info Equip State)
+bit 4   1 = Use Byte 10 (Heat Source)
+bit 5   1 = Use Byte 11 (Desired Water Temp)
+bit 6   1 = Use Byte 12 (Desired Spa Temp)
+bit 7   1 = Use Byte 13 (Switch State)
+
+***************************************************************************
+
+Hi Byte of Checksum: (Byte 15)
+Lo Byte of Checksum: (Byte 16)
+The checksum bytes contain a simple 16 bit checksum.
+
+***************************************************************************
+
+
+
+--------------------------------------------------------------------------
+Basic Acknowledge Packet: (Sent from LX3xxx to controller)
+--------------------------------------------------------------------------
+
+Byte 0    SYNC BYTE 0         0xFFh (always)
+Byte 1    SYNC BYTE 1         0xAAh (always)
+Byte 2    Destination Address 0x0Fh (always)
+Byte 3    LX3xxx Version      0x??h (see definitions)
+Byte 4    OpCode              0x02h (always)
+Byte 5    Info Field Length   0x10h (always)
+Byte 6    Minutes             0x00h - 0x3Bh (see definitions)
+Byte 7    Hours               0x00h - 0x17h (see definitions)
+Byte 8    Primary Equipment   0x??h (see definitions)
+Byte 9    Secondary Equipment 0x??h (see defiintions)
+Byte 10   Delay/Heat Source   0x??h (see definitions)
+Byte 11   Water Temperature   0x??h (see definitions)
+Byte 12   Solar Temperature   0x??h (see definitions)
+Byte 13   Spa Water Temp      0x??h (3830 only - see definitions)
+Byte 14   Spa Solar Temp      0x??h (3830 only - see definitions)
+Byte 15   Desired Pool Temp   0x??h (see definitions)
+Byte 16   Desired Spa Temp    0x??h (see definitions)
+Byte 17   Air Temperature     0x??h (see definitions)
+Byte 18   Spare/Future Use    0x??h (see definitions)
+Byte 19   Spare/Future Use    0x??h (see definitions)
+Byte 20   Equip/Sensor Stat   0x??h (see definitions)
+Byte 21   Product Type/Stat   0x??h (see definitions)
+Byte 22   Hi Byte of Checksum 0x??h (see definitions)
+Byte 23   Lo Byte of Checksum 0x??h (see definitions)
+
+
+--------------------------------------------------------------------------
+Byte Definitions:
+--------------------------------------------------------------------------
+
+LX3xxx Version: (Byte 3)  (Version)
+A value ranging from 0 to 255, given basic firmware revision code.
+a value of 10 equals version 1.0, a value of 23 equals version 2.3, etc.
+
+***************************************************************************
+
+Minutes: (Byte 6)  (Current minutes value)
+0 - 59 / 0x00h - 0x3Bh   Read from the real time clock in the LX3xxx.
+
+***************************************************************************
+
+Hours: (Byte 7)  (Current Hours value)
+0 - 23 / 0x00h - 0x17h   Read from the real time clock in the LX3xxx.
+
+***************************************************************************
+
+
+
+***************************************************************************
+
+Primary Equipment: (Byte 8)  (Primary Equipment State)
+
+                  3x00/3830  3810   3820
+Bit 0     State     Spa      High   Aux1    1 = Circuit On
+Bit 1     State     Pool     Low    Aux2    1 = Circuit On
+Bit 2     State     Aux1     Aux1   Aux3    1 = Circuit On
+Bit 3     State     Aux2     Aux2   Aux4    1 = Circuit On
+Bit 4     State     Aux3     Aux3   Aux5    1 = Circuit On
+Bit 5     State     Aux4     Aux4   Aux6    1 = Circuit On
+Bit 6     State     Aux5     Aux5   Aux7    1 = Circuit On
+Bit 7     State     Aux6     Aux6   Aux8    1 = Circuit On
+
+***************************************************************************
+
+Secondary Equipment: (Byte 9)  (Secondary equipment state)
+Bit 0     Service Mode   1 = On (all controller commands are ignored)
+                             This is service mode, and only local switches
+                             at the LX3xxx equipment pad are honored.
+Bit 1     Heater State   1 = On (if 3830 this is the Pool heater state)
+Bit 2     Solar State    1 = On (if 3830 this is the Pool solar state)
+Bit 3     Remotes Enable 1 = On (state of the Spa side remote)
+                             If OFF all remote Spa side switches are
+                             ignored.
+Bit 4     C/F            1 = Display in Degrees C / 0 = degrees F
+                             This is for Cp3xxx display purposes only.
+Bit 5     Solar Present  1 = Yes (if 3830 this is the Pool solar present)
+                             This is required to decide whether to allow
+                             the user to select solar as a heat method.
+Bit 6     Aux7 State     1 = On  (This would be Aux9 on a 3820, but is )
+                                 (not implemented                      )
+Bit 7     Freeze Mode    1 = On (this indicates that the LX3xxx has entered
+                             Protective freeze mode.
+
+
+***************************************************************************
+
+
+***************************************************************************
+
+Delay/Heat Source: (Byte 10)  (Circuit Delay & Heat Source info)
+Bit 0     Spa Delay      1 = On (indicates that the pump is being forced
+                                on by the delay function to allow the 
+                                heater to cool down)
+Bit 1     Pool Delay     1 = On (indicates that the pump is being forced
+                                on by the delay function to allow the 
+                                heater to cool down)
+Bit 2     Cleaner Delay  1 = On (indicates that the cleaner is being forced
+                                off by the delay function to allow water
+                                to fill the pipes)
+Bit 3     Spa Solar Pres 1 = Yes (if 3830 this is the Spa solar present)
+                             This is required to decide whether to allow
+                             the user to select solar as the heat method.
+
+Bit 4     Pool Lo Bit    (see table)  (Low temperature setting on the  )
+Bit 5     Pool Hi Bit    (see table)  (3810 controller                 )
+Bit 6     Spa Lo Bit     (see table)  (High temperature setting on the )
+Bit 7     Spa Hi Bit     (see table)  (3810 controller                 )
+
+---------
+|Hi |Lo |
+|Bit|Bit|
+------------------------------------------------------------------------
+| 0 | 0 | Heat Source OFF (no heating allowed)                         |
+| 0 | 1 | Heater ON (Pool will also use Solar if available)            |
+| 1 | 0 | Solar Priority ON (If Solar is not available,heater is used) |
+| 1 | 1 | Solar Only ON (If Solar is not available,no heating is used) |
+------------------------------------------------------------------------
+
+***************************************************************************
+
+Water Temperature: (Byte 11) (Current Water Temperature)
+Current Water Temperature given in 0.25 degrees C increments.
+i.e. 80 (0x50h) = 20 degrees C. If this is a 3830, this is the
+Pool water temp.
+
+***************************************************************************
+
+Solar Temperature: (Byte 12) (Current Solar Temperature)
+Current Solar Temperature given in 0.5 degrees C increments.
+i.e. 80 (0x50h) = 40 degrees C. If this is a 3830, this is the
+Pool Solar temp.
+
+***************************************************************************
+
+Spa Water Temperature: (Byte 13) (Current Spa Water Temp - 3830 only)
+Current Spa Water Temperature given in 0.25 degrees C increments.
+i.e. 80 (0x50h) = 20 degrees C. 
+
+***************************************************************************
+
+Spa Solar Temperature: (Byte 14) (Current Spa Solar Temp - 3830 only)
+Current Solar Temperature given in 0.5 degrees C increments.
+i.e. 80 (0x50h) = 40 degrees C. 
+
+***************************************************************************
+
+
+
+***************************************************************************
+
+Desired Pool Temp: (Byte 15)  (Current Desired Pool Temp)
+This is the current Desired Control temperature of the Pool water. The
+value is given in 0.25 degrees C. For example if the desired temperature 
+of the Pool is 20 degrees C / 68 degrees F. The value would be 80 (0x50h).
+
+Note:
+       If this is a 3810 controller this is the desired Low temperature
+       setting.
+
+***************************************************************************
+
+Desired Spa Temp: (Byte 16)  (Current Desired Spa Temp)
+This is the current Desired Control temperature of the Spa water. The
+value is given in 0.25 degrees C. For example if the desired temperature 
+of the Spa is 40 degrees C / 104 degrees F. The value would be 160 (0xA0h).
+
+Note:
+       If this is a 3810 controller this is the desired High temperature
+       setting.
+
+***************************************************************************
+
+Air Temperature: (Byte 17)  (Current Air temperature)
+This is the current Air temperature. It is used to determine Freeze mode
+conditions. The value is given in 0.5 degrees C increments. For example 
+ a value of 20 (0x14h) would be 10 degrees C / 50 degrees F. 
+
+***************************************************************************
+
+Spare/Future Use: (Byte 18)  (Not used)
+
+***************************************************************************
+
+Spare/Future Use: (Byte 19)  (Not used)
+
+***************************************************************************
+
+
+
+***************************************************************************
+
+Equip/Sensor Stat: (Byte 20)  (Special Equipment and Sensor status)
+Bit 0     Backwash State 1 = On  This indicates that a programmed
+                                 Backwash Cycle is taking place. This
+                                 requires that Aux7 Has been configured
+                                 and programmed as a backwash circuit.
+Bit 1     Floor Cleaner  1 = On  This indicates floor cleaner system is
+                                 active.
+Bit 2     Aux3 = Dimmer  1 = Yes This indicates that Aux3 is configured
+                                 as a dimmer rather than a standard relay
+                                 circuit. This requires a special dimmer
+                                 module.  Note that on a 3820 this circuit
+                                 is refered to as Aux5.
+Bit 3     Aux4 = Dimmer  1 = Yes This indicates that Aux4 is configured
+                                 as a dimmer rather than a standard relay
+                                 circuit. This requires a special dimmer
+                                 module.  Note that on a 3820 this circuit
+                                 is refered to as Aux6.
+Bit 4     Water Sensor   1 = OK  This indicate that the Water sensor(s) is
+                                 is functioning properly. If this bit is
+                                 FALSE  the user must be informed of
+                                 the problem. Heating will not be allowed.
+                                 This is ignored on a 3820.
+Bit 5     Solar Sensor   1 = OK  This indicate that the Solar sensor(s) is
+                                 is functioning properly. If this bit is
+                                 FALSE the user must be informed of
+                                 the problem. Solar heating will not be 
+                                 allowed.
+Bit 6     Air Sensor     1 = OK  This indicate that the Freeze sensor is
+                                 is functioning properly. If this bit is
+                                 FALSE the user must be informed of
+                                 the problem. 
+Bit 7     Freeze Present 1 = Yes This bit indicates that at least one
+                                 circuit has been configured to protect
+                                 the equipment during a freeze.
+
+***************************************************************************
+
+
+
+***************************************************************************
+Product Type/Stat: (Byte 21)
+Bit 0     Error 5        1 = True (an error has been detected at the
+                             Spa Side remote, it has been disabled)
+Bit 1     Error 6        1 = True (not used)
+Bit 2     Spa Heater     1 = On (3830 only)
+Bit 3     Spa Solar      1 = On (3830 only)
+Bit 4     Type - bit 0   (see table)
+Bit 5     Type - bit 1   (see table)
+Bit 6     Type - bit 2   (see table)
+Bit 7     Type - bit 3   (see table)
+
+-----------------
+|Bit|Bit|Bit|Bit|
+| 3 | 2 | 1 | 0 |
+------------------------------------------------------------------------
+| 0 | 0 | 0 | 0 | 3400 System                                          |
+| 0 | 0 | 1 | 0 | 3410 System (not used)                               |
+| 0 | 1 | 0 | 0 | 3600 System                                          |
+| 0 | 1 | 1 | 0 | 3610 System (not used)                               |
+| 1 | 0 | 0 | 0 | 3800 System                                          |
+| 1 | 0 | 1 | 0 | 3810 System                                          |
+| 1 | 1 | 0 | 0 | 3820 System                                          |
+| 1 | 1 | 1 | 0 | 3830 System                                          |
+------------------------------------------------------------------------
+
+***************************************************************************
+
+Hi Byte of Checksum: (Byte 22)
+Lo Byte of Checksum: (Byte 23)
+The checksum bytes contain a simple 16 bit checksum.
+
+The checksum will be the 16 bit result of adding all previous bytes
+in the packet.
+
+The checksum will be a number between 0 and 65,536 decimal,
+or 0x0000 to 0xffff Hex.
+Example: if the checksum is 241 HEX, then:
+Hi Byte = 02 HEX
+Lo Byte = 41 HEX
+
+***************************************************************************
+
+
+
+--------------------------------------------------------------------------
+Simple Operation:
+--------------------------------------------------------------------------
+    During normal operation the 'Basic Acknowledge Packet' is transmitted
+to all controllers approx. every 2.5 seconds. This can be viewed as a
+"keep Alive" packet, or a system heartbeat.
+
+    Each time a Basic control packet is sent, it is answered immediately 
+with a simple ACK packet if it was received intact, or a simple NACK
+packet if it was not. If a NACK is received, it is of coarse the
+controllers job to resend the control data packet.
+
+    Assuming the control packet was received intact, and an ACK was
+sent, it is followed approx 50ms later with the full 'Basic acknowledge
+packet'. Giving the controller the current equipment state.
+
+
+ACK Packet:
+...................................................
+Byte 0    SYNC BYTE 0         0xFFh (always)
+Byte 1    SYNC BYTE 1         0xAAh (always)
+Byte 2    Destination Address 0x01h (always)
+Byte 3    LX3xxx Version      0x??h (see definitions)
+Byte 4    OpCode (ACK)        0x01h (always)
+Byte 5    Info Field Length   0x01h (always)
+Byte 6    Packet type ACK'd   0x82h (always)
+Byte 7    Hi Byte of Checksum 0x??h (see definitions)
+Byte 8    Lo Byte of Checksum 0x??h (see definitions)
+
+
+NACK Packet:
+..................................................
+Byte 0    SYNC BYTE 0         0xFFh (always)
+Byte 1    SYNC BYTE 1         0xAAh (always)
+Byte 2    Destination Address 0x0Fh (always)
+Byte 3    LX3xxx Version      0x??h (see definitions)
+Byte 4    OpCode (NACK)       0x00h (always)
+Byte 5    Info Field Length   0x01h (always)
+Byte 6    NACK data           0xFFh (always)
+Byte 7    Hi Byte of Checksum 0x??h (see definitions)
+Byte 8    Lo Byte of Checksum 0x??h (see definitions)
+
+
+
+
+--------------------------------------------------------------------------
+Examples:
+--------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------
+Interlocks, Delays, and Configuration Considerations:
+--------------------------------------------------------------------------
+    A number of functional and safety interlocks are provided, and
+may be configured via DipSwitch settings in the Lx3xxx circuit board.
+Further information about these can be found in the owners/operators
+manual.

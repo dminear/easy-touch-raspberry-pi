@@ -1,0 +1,46 @@
+# from http://forum.universal-devices.com/viewtopic.php?t=6304
+
+The interface needs to be set to 9600,8,n,1
+
+To send a command to the Pentair system, use binary mode for the following sequence of bytes:
+
+0;255;165;1;16;32;134;2;A;B;C1;C2
+
+where:
+A = Pentair circuit number
+B = 0 for off, 1 for on
+C1, C2 = 2 byte checksum
+
+For example, to turn circuit 3 on:
+
+0;255;165;1;16;32;134;2;3;1;1;98
+
+The system is also constantly broadcasting system status (circuit state, air and water temperatures, etc.), and I have PC code for decoding this - at some point when we can set variables in the ISY I will write the bridge.
+
+One thing to remember if you want to do this is that RS485 is a multidrop bus, and so collisions are possible if two devices transmit at the same time. Nothing bad will happen (because of the checksum) but the message will be ignored. Since there isn't any way to currently check for an acknowledgement, it is probably good practice to send the command a couple of times with a short delay between "just in case".
+
+I have the commands for circuits 1-4 available for import into Network Resources is someone wants it (I don't think I can post them on the forum).
+
+
+
+
+--------------------------
+Spa On - 255;255;255;255;  0;255;255;165;1;  16;  35;    134; 2;   1;    1;     1;99;     255;255;255;255
+         < 0xFF padding >  <header........>  <src><dest><cmd><len><pump><state><checksum><0xff padding>
+
+Spa Off - 255;255;255;255;  0;255;255;165;1;  16;  35;    134; 2;   1;    0;     1;98;     255;255;255;255
+          < 0xFF padding >  <header........>  <src><dest><cmd><len><pump><state><checksum><0xff padding>
+
+NOTE: The pump # is likely to be installation dependent.
+
+
+
+-------------
+
+doen't seem to have real good info
+http://www.autelis.com/wiki/index.php?title=Pool_Control_for_Pentair_Intellitouch
+
+-------------
+
+
+
