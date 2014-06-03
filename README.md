@@ -11,3 +11,4 @@ I have a wireless Easy-Touch system, but it got some corrosion on the Menu butto
 
 I figured with $40 for the Raspberry Pi + $12 for the RS-485 controller + a book Getting Started with Raspberry Pi (Make Magazine publisher) I would be out ahead.
 
+Here's a [close up](images/pi-close.jpg) with the RS-485 board plugged in, and a [pull back](images/pi-all.jpg) of the local development environment on my kitchen counter.
