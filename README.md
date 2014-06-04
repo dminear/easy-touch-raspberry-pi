@@ -56,6 +56,10 @@ On the other side, I hooked up WHT/BLUE to the RS-485 A side and BLUE to the
 B side. I also put a 1K resister across the A/B line as the line length is
 about 30 feet of wire (I didn't want to cut it yet).
 
+From my understanding of the MAX481 datasheet, the A line is the non-inverting
+line, and the B line is the inverting. Also, a more positive voltage on
+the A line is a logic 1 on the TTL side.
+
 I wrote a small python program to talk to the serial port and dump the hex
 bytes that I receive. The RX LED seems to blink like there is some small
 and larger data packets, so it's looking good.  I do decode the string
