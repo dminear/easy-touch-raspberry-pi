@@ -36,10 +36,13 @@ differential pair when a low is transmitted. Essentially, the driver only
 drives zeros on the line. This is something that may be a problem in the
 future.
 
-I also got an AA battery I had and hooked it up to the A/B data line. When I
-made the A line more positive than B, the RX LED lit up. So, this means that
-the natural state of the bus should be where the lower voltage is on the A
-side. Hopefully, this will work out with the pool controller.
+I also got an AA battery I had and hooked it up to the A/B data line. When
+the B side is more positive the RX LED lights up.) So, this means that
+the natural state of the bus should be where the lower voltage is on the B
+side. Conversely, the bus is normally in a "1" state where the A side is
+more positive. If you read the Wikipedia article and just transpose
+A/B then everything works out. So much for standards.
+Hopefully, this will work out with the pool controller.
 
 2014-06-03
 
@@ -52,8 +55,10 @@ positive side of things, so the WHT/BLUE line is always my designated line
 and hooked up as tip or positive. As a POTS line, tip is ground and ring is
 -48VDC, so tip is still more positive!
 
-On the other side, I hooked up WHT/BLUE to the RS-485 A side and BLUE to the
-B side. I also put a 1K resister across the A/B line as the line length is
+On the other side of the phone line wire, I hooked up 
+WHT/BLUE (tip) to the RS-485 A side and BLUE (ring) to the
+B side. Not sure why I am carrying POTS terms to RS-485. I also i
+put a 1K resister across the A/B line as the line length is
 about 30 feet of wire (I didn't want to cut it yet).
 
 From my understanding of the MAX481 datasheet, the A line is the non-inverting
@@ -65,3 +70,13 @@ bytes that I receive. The RX LED seems to blink like there is some small
 and larger data packets, so it's looking good.  I do decode the string
 "Intellichlor" every so often, so that's a good sign that I am wired
 correctly.
+
+2014-06-04
+
+I was having network problems with my Raspberry Pi ethernet, and it turns
+out it was a bad connection on the RJ-45 jack. I wire my networking with
+with EIA-568B and pair 3 had a bad connection but fixed now.
+
+I created a knock off of the Pentair protocol sniffer and found my header
+sync bytes are different than other documentation that I found. So now
+I am busy trying to make sense of it all. Might take some time.
