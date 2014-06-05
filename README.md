@@ -74,8 +74,10 @@ correctly.
 2014-06-04
 
 I was having network problems with my Raspberry Pi ethernet, and it turns
-out it was a bad connection on the RJ-45 jack. I wire my networking with
-with EIA-568B and pair 3 had a bad connection but fixed now.
+out it was a bad connection on the RJ-45 jack of my internal home wiring.
+I wire my networking with with EIA-568B and pair 3 had a bad connection 
+at the wall jack but it is fixed now. There was much rejoicing with
+reliable 100Base-T networking.
 
 I created a knock off of the Pentair protocol sniffer and found my header
 sync bytes are different than other documentation that I found. So now
