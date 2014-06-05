@@ -81,4 +81,5 @@ reliable 100Base-T networking.
 
 I created a knock off of the Pentair protocol sniffer and found my header
 sync bytes are different than other documentation that I found. So now
-I am busy trying to make sense of it all. Might take some time.
+I am busy trying to make sense of it all. Might take some time. See
+[step2](/src/step2/)
