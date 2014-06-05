@@ -1,4 +1,9 @@
 #! /usr/bin/python
+#
+# Dan Minear
+# 2014-06-04
+# Based on earlier code. Does not seem to be exactly what I am using. I have 
+# an EasyTouch 8 channel controller.
 
 import urllib
 import time
@@ -15,31 +20,58 @@ def updateVera(device,variable,value):
 
 
 output = " "
+
 ser = serial.Serial('/dev/ttyAMA0', baudrate=9600, timeout=3)
-
-data=[]
-for x in range(128):
+scanlen = 200
+while True:
+  ascdata=""
+  data=[]
+  for x in range(scanlen):
 	output = ser.read()
-	d=ord(output)
-	data.append(d)
-	print x,"\t",d,"\t",hex(d),"\t","{0:08b}".format(d)
+	data.append(ord(output))
+	ascdata += output
+	#print x,"\t",d,"\t",hex(d),"\t","{0:08b}".format(d)
 
 
-## find start of packet
-#start=[255,255,255,255,0,255,165,39]
-start=[0xff, 0xff, 0xff, 0xff, 0x00, 0xff, 0xa5, 0x0f, 0x0f]
+  ## find start of packet
+  #start=[255,255,255,255,0,255,165,39]
+  start=[ 0xff, 0x00, 0xff, 0xa5]
 
-startBit=0;
-for x in range(118):
+  startBit=0;
+  offsetlist = []
+  for x in range(scanlen-5):
 	if data[x]==start[0] and startBit==0:
 		if data[x+1]==start[1]:
 			if data[x+2]==start[2]:
 				if data[x+3]==start[3]:
-					if data[x+4]==start[4]:
-						if data[x+5]==start[5]:
-							if data[x+6]==start[6]:
-								if data[x+7]==start[7]:
-									startBit=x+6
+					offsetlist.append(x)
+
+					#sys.stdout.write(" : ")
+					#sys.stdout.flush()
+					#for y in range(x,x+20):
+					#	sys.stdout.write( hex(data[y]) + " " )
+					#print
+
+					#if data[x+4]==start[4]:
+					#	if data[x+5]==start[5]:
+					#		if data[x+6]==start[6]:
+					#			if data[x+7]==start[7]:
+					#				startBit=x+6
+  # now print all the matching lines
+  missed = False
+  for s in range(len(offsetlist)-1):
+    #print offsetlist[s]
+    if s==start[-1]:
+	# end match, possible missed packet
+	missed = True 
+    begin = offsetlist[s]
+    end = offsetlist[s+1]
+    for y in range(begin,end):
+      sys.stdout.write( hex(data[y]) + " " )
+    print
+    print ascdata[begin:end]
+
+
 print startBit
 if startBit>0:
 	state=["OFF","ON"]
