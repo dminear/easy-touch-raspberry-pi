@@ -43,7 +43,7 @@ while True:
 	if data[x]==start[0] and startBit==0:
 		if data[x+1]==start[1]:
 			if data[x+2]==start[2]:
-				if data[x+3]==start[3]:
+				#if data[x+3]==start[3]:
 					offsetlist.append(x)
 
 					#sys.stdout.write(" : ")
@@ -66,8 +66,8 @@ while True:
 	missed = True 
     begin = offsetlist[s]
     end = offsetlist[s+1]
-    for y in range(begin,end):
-      sys.stdout.write( hex(data[y]) + " " )
+    for y in range(begin+1,end):
+      sys.stdout.write( "%02x" % data[y] + " " )
     print
     print ascdata[begin:end]
 
