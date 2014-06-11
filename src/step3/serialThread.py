@@ -46,14 +46,12 @@ class serialThread (threading.Thread):
 			output = self.ser.read(scanlen)
 			for i in output:
 				inputBuffer.append( ord(i) )		# append bytes
-			print inputBuffer
 
 			#data.append(ord(output))
 			#ascdata += output
 			#print x,"\t",d,"\t",hex(d),"\t","{0:08b}".format(d)
 
 			if len(inputBuffer) > 50:	# start searching for packet header
-				print "process inputBuffer"
   				## find start of packet
 				#start=[255,255,255,255,0,255,165,39]
 				start=[ 0xff, 0x00, 0xff, 0xa5]
@@ -66,7 +64,6 @@ class serialThread (threading.Thread):
 							if inputBuffer[x+2] == start[2]:
 								#if inputBuffer[x+3] == start[3]:
 
-								print "sync!"
 								offsetlist.append(x)
 
 								#sys.stdout.write(" : ")
@@ -82,19 +79,21 @@ class serialThread (threading.Thread):
 								#				startBit=x+6
 								# now print all the matching lines
 
-								missed = False
-								for s in range(len(offsetlist)-1):
-									#print offsetlist[s]
-									if s == start[-1]:
-										# end match, possible missed packet
-										missed = True 
-									begin = offsetlist[s]
-									end = offsetlist[s+1]
-									for y in range(begin+1,end):
-										sys.stdout.write( "%02x" % inputBuffer[y] + " " )
-									print
-									#print ascdata[begin:end]
-			inputBuffer=[]		# clear buffer
+				# we now have all the sync markers, but the last one could
+				# possibly be the start of the next message that is
+				# coming in, so we will not process that message yet
+				for s in range( len( offsetlist ) - 1 ):
+					begin = offsetlist[s]
+					end = offsetlist[ s + 1 ] - 1
+					# process message packet here -- starts at begin
+					# to end inclusive
+					for y in range( begin, end + 1 ):	# need to include end byte
+						sys.stdout.write( "%02x" % inputBuffer[y] + " " )
+					print
+					# shift this off the front of inputBuffer
+				inputBuffer = inputBuffer[offsetlist[-1]:]
+
+				#print ascdata[begin:end]
 
 def dummyfunction():
 	print startBit
