@@ -4,14 +4,14 @@ import serialThread
 import httpThread
 import time
 
-serialThread = serialThread( '/dev/ttyAMA0', 1, 2)
-httpThread = httpThread()
+serialT = serialThread.serialThread( '/dev/ttyAMA0', 1, 2)
+httpT = httpThread.httpThread(1,2)
 
-serialThread.start()
-httpThread.start()
+serialT.start()
+httpT.start()
 
+time.sleep(10)
 
-sleep(10)
-
-serialThread.stop()
+serialT.stop()
+httpT.stop()
 

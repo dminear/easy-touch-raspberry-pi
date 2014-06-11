@@ -34,7 +34,7 @@ class serialThread (threading.Thread):
 	def run(self):
 		print "Starting serial thread"
 		self.ser = serial.Serial(self.device, baudrate=9600, timeout=1)
-		scanlen = 500
+		scanlen = 200
 		inputBuffer = []
 		while self.exit == False:
 
@@ -43,8 +43,11 @@ class serialThread (threading.Thread):
 			#ascdata=""
  			#data=[]
 			
-			output = ser.read(scanlen)
-			inputBuffer.append(output)		# append bytes
+			output = self.ser.read(scanlen)
+			for i in output:
+				inputBuffer.append( ord(i) )		# append bytes
+			print inputBuffer
+
 			#data.append(ord(output))
 			#ascdata += output
 			#print x,"\t",d,"\t",hex(d),"\t","{0:08b}".format(d)
@@ -58,10 +61,12 @@ class serialThread (threading.Thread):
 				startByte=0;
 				offsetlist = []
 				for x in range(len(inputBuffer)-5):
-					if inputBuffer[x]==start[0] and startByte==0:
-						if inputBuffer[x+1]==start[1]:
-							if inputBuffer[x+2]==start[2]:
-								#if inputBuffer[x+3]==start[3]:
+					if inputBuffer[x] == start[0] and startByte == 0:
+						if inputBuffer[x+1] == start[1]:
+							if inputBuffer[x+2] == start[2]:
+								#if inputBuffer[x+3] == start[3]:
+
+								print "sync!"
 								offsetlist.append(x)
 
 								#sys.stdout.write(" : ")
