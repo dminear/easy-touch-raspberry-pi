@@ -10,7 +10,13 @@ httpT = httpThread.httpThread(1,2)
 serialT.start()
 httpT.start()
 
-time.sleep(10)
+bExit = False
+
+while not bExit:
+	try: 
+		time.sleep(1)
+	except:
+		bExit=True
 
 serialT.stop()
 httpT.stop()
