@@ -16,5 +16,5 @@ class httpThread (threading.Thread):
 
 	def run(self):
 		while self.exit == False:
-			print "http tick"
+			#print "http tick"
 			time.sleep(1)

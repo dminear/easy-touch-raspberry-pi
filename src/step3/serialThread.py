@@ -95,9 +95,6 @@ class serialThread (threading.Thread):
 				#print ascdata[begin:end]
 
 def processMessage( message ):
-	for y in message:
-		sys.stdout.write( "%02x" % y + " " )
-	print
 
 	dest = message[5]
 	src = message[6]
@@ -108,6 +105,10 @@ def processMessage( message ):
 	
 	chksum = 0;
 	if len(message) >= length + 9 + 2:	# good
+		for y in range(length+9+2):
+			sys.stdout.write( "%02x " % message[y] )
+		print
+
 		#compute checksum
 		for x in range( 3, 8 + length + 1):	# 8 bytes + len + 1 for range func
 			chksum += message[x];
@@ -139,14 +140,17 @@ def decodeStatus( data ):
 		print "Heater Temperature: ",data[heaterTemp]
 
 		# TODO: not sure about any of this, still need to figure out
-		equip="{0:08b}".format(data[11])
-		print "Equipment: \t",equip
-		print "Pool Pump: \t",state[int(equip[7:8])]
-		print "Cleaner: \t",state[int(equip[6:7])]
-		print "Pool Light: \t",state[int(equip[5:6])]
-		print "Slow Speed: \t",state[int(equip[4:5])]
+		equip1="{0:08b}".format(data[11])
+		print "Equipment1: \t",equip1
+		equip2="{0:08b}".format(data[12])
+		print "Equipment2: \t",equip2
+		#print "Pool Pump: \t",state[int(equip[7:8])]
+		#print "Cleaner: \t",state[int(equip[6:7])]
+		#print "Pool Light: \t",state[int(equip[5:6])]
+		#print "Slow Speed: \t",state[int(equip[4:5])]
 		#updateVera(54,1,data[waterTemp])
 		#updateVera(54,2,data[airTemp])
 		#updateVera(54,3,state[int(equip[5:6])])
 		#updateVera(54,4,localtime)
+		print
 
