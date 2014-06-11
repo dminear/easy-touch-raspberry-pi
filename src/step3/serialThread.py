@@ -84,16 +84,23 @@ class serialThread (threading.Thread):
 				# coming in, so we will not process that message yet
 				for s in range( len( offsetlist ) - 1 ):
 					begin = offsetlist[s]
-					end = offsetlist[ s + 1 ] - 1
+					end = offsetlist[ s + 1 ]
 					# process message packet here -- starts at begin
 					# to end inclusive
-					for y in range( begin, end + 1 ):	# need to include end byte
-						sys.stdout.write( "%02x" % inputBuffer[y] + " " )
-					print
+					message = inputBuffer[begin:end]
+					processMessage( message )
+					#for y in range( begin, end ):	# need to include end byte
+					#	sys.stdout.write( "%02x" % inputBuffer[y] + " " )
+					#print
 					# shift this off the front of inputBuffer
 				inputBuffer = inputBuffer[offsetlist[-1]:]
 
 				#print ascdata[begin:end]
+
+def processMessage( message ):
+	for y in message:
+		sys.stdout.write( "%02x" % message[y] + " " )
+	print
 
 def dummyfunction():
 	print startBit
