@@ -83,3 +83,19 @@ I created a knock off of the Pentair protocol sniffer and found my header
 sync bytes are different than other documentation that I found. So now
 I am busy trying to make sense of it all. Might take some time. See
 [step2](/src/step2/)
+
+2014-06-10
+
+Created step3 and started creating some threading classes. One thread
+will be the serial port routine, and the other thread will be the http
+server.  They will talk to eachother via [redis](http://redis.io) which
+will serve as an in-memory cache. I am hoping to stuff value data pairs
+into redis that the web server can easily retrieve and display. This will
+also allow the circuit names to be changed for different configurations.
+
+I also confirmed the checksum packet calculation and verified things seem
+to be working.
+
+I am starting to understand Python a little bit better and how modules
+are defined and used in another python file. So far so good.
+
