@@ -123,19 +123,23 @@ def processMessage( message ):
 
 
 def decodeStatus( data ):
-		startBit = 10
 		state=["OFF","ON"]
 		waterTemp=23
+		heaterTemp=24
 		airTemp=27
+		clockHours=9
+		clockMinutes=10
 
 		t=time.localtime()
 		localtime = time.strftime("%H:%M",t)
 		print localtime
+		print "Pool Time: %02d:%02d" % (data[clockHours], data[clockMinutes])
 		print "Air Temperature: ",data[airTemp]
 		print "Water Temperature: ",data[waterTemp]
+		print "Heater Temperature: ",data[heaterTemp]
 
 		# TODO: not sure about any of this, still need to figure out
-		equip="{0:08b}".format(data[startBit+8])
+		equip="{0:08b}".format(data[11])
 		print "Equipment: \t",equip
 		print "Pool Pump: \t",state[int(equip[7:8])]
 		print "Cleaner: \t",state[int(equip[6:7])]
