@@ -96,6 +96,13 @@ class serialThread (threading.Thread):
 
 def processMessage( message ):
 
+	if len(message) < 11:
+		print "Message short:"
+		for y in message:
+			sys.stdout.write( "%02x " % y )
+		print
+		return
+				
 	dest = message[5]
 	src = message[6]
 	cmd = message[7]
