@@ -34,7 +34,7 @@ class serialThread (threading.Thread):
 	def run(self):
 		print "Starting serial thread"
 		self.ser = serial.Serial(self.device, baudrate=9600, timeout=1)
-		scanlen = 200
+		scanlen = 100
 		inputBuffer = []
 		while self.exit == False:
 
@@ -89,51 +89,60 @@ class serialThread (threading.Thread):
 					# to end inclusive
 					message = inputBuffer[begin:end]
 					processMessage( message )
-					#for y in range( begin, end ):	# need to include end byte
-					#	sys.stdout.write( "%02x" % inputBuffer[y] + " " )
-					#print
-					# shift this off the front of inputBuffer
+				# shift this off the front of inputBuffer
 				inputBuffer = inputBuffer[offsetlist[-1]:]
 
 				#print ascdata[begin:end]
 
 def processMessage( message ):
 	for y in message:
-		sys.stdout.write( "%02x" % message[y] + " " )
+		sys.stdout.write( "%02x" % y + " " )
 	print
 
-def dummyfunction():
-	print startBit
-	if startBit>0:
+	dest = message[5]
+	src = message[6]
+	cmd = message[7]
+	length = message[8]
+	chkhi = 0
+	chklo = 0	
+	
+	chksum = 0;
+	if len(message) >= length + 9 + 2:	# good
+		#compute checksum
+		for x in range( 3, 8 + length + 1):	# 8 bytes + len + 1 for range func
+			chksum += message[x];
+		chkhi = message[length+9]
+		chklo = message[length+10]
+	else:
+		print "ERR: message too small"
+	print "dest %d, src %d, cmd %d, len %d, chksum %02x %02x" % (dest, src, cmd, length, chksum / 0x100, chksum % 0x100)
+	print
+	if dest == 0x0f and src == 0x10 and cmd == 0x02 and length == 0x1d and chksum == chkhi*256+chklo:	# status
+		decodeStatus( message )
+	
+
+
+def decodeStatus( data ):
+		startBit = 10
 		state=["OFF","ON"]
-		packetLength=36
-		waterTemp=startBit+20
-		airTemp=startBit+24
+		waterTemp=23
+		airTemp=27
 
-		## calculate Checksum
-		chksumCalc=0;	
-		for x in range(startBit,startBit+packetLength-1):
-			chksumCalc=chksumCalc+data[x]
+		t=time.localtime()
+		localtime = time.strftime("%H:%M",t)
+		print localtime
+		print "Air Temperature: ",data[airTemp]
+		print "Water Temperature: ",data[waterTemp]
 
-		chksum=data[startBit+packetLength]+256*data[startBit+packetLength-1]
-		print chksum,":",chksumCalc
-		if (chksum==chksumCalc):
-			t=time.localtime()
-			localtime = time.strftime("%H:%M",t)
-			print "Air Temperature: ",data[airTemp]
-			print "Water Temperature: ",data[waterTemp]
-			equip="{0:08b}".format(data[startBit+8])
-			print "Equipment: \t",equip
-			print "Pool Pump: \t",state[int(equip[7:8])]
-			print "Cleaner: \t",state[int(equip[6:7])]
-			print "Pool Light: \t",state[int(equip[5:6])]
-			print "Slow Speed: \t",state[int(equip[4:5])]
-			updateVera(54,1,data[waterTemp])
-			updateVera(54,2,data[airTemp])
-			updateVera(54,3,state[int(equip[5:6])])
-			updateVera(54,4,localtime)
-		else: 
-			updateVera(54,1,"ERROR")
-			updateVera(54,2,"ERROR")
-			updateVera(54,3,"ERROR")
+		# TODO: not sure about any of this, still need to figure out
+		equip="{0:08b}".format(data[startBit+8])
+		print "Equipment: \t",equip
+		print "Pool Pump: \t",state[int(equip[7:8])]
+		print "Cleaner: \t",state[int(equip[6:7])]
+		print "Pool Light: \t",state[int(equip[5:6])]
+		print "Slow Speed: \t",state[int(equip[4:5])]
+		#updateVera(54,1,data[waterTemp])
+		#updateVera(54,2,data[airTemp])
+		#updateVera(54,3,state[int(equip[5:6])])
+		#updateVera(54,4,localtime)
 
