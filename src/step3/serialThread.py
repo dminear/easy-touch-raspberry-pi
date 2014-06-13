@@ -97,7 +97,7 @@ class serialThread (threading.Thread):
 def processMessage( message ):
 
 	if len(message) < 11:
-		print "Message short:"
+		print "ERR: Message short:"
 		for y in message:
 			sys.stdout.write( "%02x " % y )
 		print
@@ -112,9 +112,6 @@ def processMessage( message ):
 	
 	chksum = 0;
 	if len(message) >= length + 9 + 2:	# good
-		for y in range(length+9+2):
-			sys.stdout.write( "%02x " % message[y] )
-		print
 
 		#compute checksum
 		for x in range( 3, 8 + length + 1):	# 8 bytes + len + 1 for range func
@@ -122,9 +119,16 @@ def processMessage( message ):
 		chkhi = message[length+9]
 		chklo = message[length+10]
 	else:
-		print "ERR: message too small"
-	print "dest %d, src %d, cmd %d, len %d, chksum %02x %02x" % (dest, src, cmd, length, chksum / 0x100, chksum % 0x100)
-	print
+		print "ERR: message not match length size"
+
+	if (dest == 0x0f or dest == 0x20) or src == 0x20:
+		for y in range(length+9+2):
+			sys.stdout.write( "%02x " % message[y] )
+		print
+
+		print "dest %d, src %d, cmd %d, len %d, chksum %02x %02x" % (dest, src, cmd, length, chksum / 0x100, chksum % 0x100)
+		print
+
 	if dest == 0x0f and src == 0x10 and cmd == 0x02 and length == 0x1d and chksum == chkhi*256+chklo:	# status
 		decodeStatus( message )
 	
