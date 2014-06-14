@@ -3,6 +3,7 @@
 import serialThread
 import httpThread
 import time
+import sys
 
 serialT = serialThread.serialThread( '/dev/ttyAMA0', 1, 2)
 httpT = httpThread.httpThread(1,2)
@@ -14,9 +15,14 @@ bExit = False
 
 while not bExit:
 	try: 
-		time.sleep(1)
+		line = sys.stdin.readline()
 	except:
 		bExit=True
+	
+	if line:	
+		print line
+
+	time.sleep(1)
 
 serialT.stop()
 httpT.stop()
