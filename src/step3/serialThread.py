@@ -15,15 +15,10 @@ import sys
 import os
 import redis
 
-#def updateVera(device,variable,value):
-#        url="http://192.168.1.28:3480/data_request?id=variableset&DeviceNum=%d&serviceId=urn:upnp-org:serviceId:VContainer1&Variable=Variable%d&Value=%s" % (device,variable,value)
-#        #print "Updating Vera: ",url
-#        f = urllib.urlopen(url);
-
 class serialThread (threading.Thread):
-	def __init__(self, device, p1, p2):
+	def __init__(self, device, circuitlist, p2):
 		self.device = device
-		self.p1 = p1
+		self.circuits = circuitlist
 		self.p2 = p2
 		self.exit = False
 		threading.Thread.__init__(self)
@@ -88,80 +83,82 @@ class serialThread (threading.Thread):
 					# process message packet here -- starts at begin
 					# to end inclusive
 					message = inputBuffer[begin:end]
-					processMessage( message )
+					self.processMessage( message )
 				# shift this off the front of inputBuffer
 				inputBuffer = inputBuffer[offsetlist[-1]:]
 
 				#print ascdata[begin:end]
 
-def processMessage( message ):
+	def processMessage( self, message ):
 
-	if len(message) < 11:
-		print "ERR: Message short:"
-		for y in message:
-			sys.stdout.write( "%02x " % y )
-		print
-		return
+		if len(message) < 11:
+			print "ERR: Message short:"
+			for y in message:
+				sys.stdout.write( "%02x " % y )
+			print
+			return
 				
-	dest = message[5]
-	src = message[6]
-	cmd = message[7]
-	length = message[8]
-	chkhi = 0
-	chklo = 0	
+		dest = message[5]
+		src = message[6]
+		cmd = message[7]
+		length = message[8]
+		chkhi = 0
+		chklo = 0	
 	
-	chksum = 0;
-	if len(message) >= length + 9 + 2:	# good
+		chksum = 0;
+		if len(message) >= length + 9 + 2:	# good
+	
+			#compute checksum
+			for x in range( 3, 8 + length + 1):	# 8 bytes + len + 1 for range func
+				chksum += message[x];
+			chkhi = message[length+9]
+			chklo = message[length+10]
+		else:
+			print "ERR: message not match length size"
 
-		#compute checksum
-		for x in range( 3, 8 + length + 1):	# 8 bytes + len + 1 for range func
-			chksum += message[x];
-		chkhi = message[length+9]
-		chklo = message[length+10]
-	else:
-		print "ERR: message not match length size"
+		if (dest == 0x0f or dest == 0x20) or src == 0x20:
+			for y in range(length+9+2):
+				sys.stdout.write( "%02x " % message[y] )
+			print
 
-	if (dest == 0x0f or dest == 0x20) or src == 0x20:
-		for y in range(length+9+2):
-			sys.stdout.write( "%02x " % message[y] )
-		print
+			print "dest %d, src %d, cmd %d, len %d, chksum %02x %02x" % (dest, src, cmd, length, chksum / 0x100, chksum % 0x100)
+			print
 
-		print "dest %d, src %d, cmd %d, len %d, chksum %02x %02x" % (dest, src, cmd, length, chksum / 0x100, chksum % 0x100)
-		print
-
-	if dest == 0x0f and src == 0x10 and cmd == 0x02 and length == 0x1d and chksum == chkhi*256+chklo:	# status
-		decodeStatus( message )
+		if dest == 0x0f and src == 0x10 and cmd == 0x02 and length == 0x1d and chksum == chkhi*256+chklo:	# status
+			self.decodeStatus( message )
 	
 
 
-def decodeStatus( data ):
-		state=["OFF","ON"]
-		waterTemp=23
-		heaterTemp=24
-		airTemp=27
-		clockHours=9
-		clockMinutes=10
+	def decodeStatus( self, data ):
+			state=["OFF","ON"]
+			waterTemp=23
+			heaterTemp=24
+			airTemp=27
+			clockHours=9
+			clockMinutes=10
 
-		t=time.localtime()
-		localtime = time.strftime("%H:%M",t)
-		print localtime
-		print "Pool Time: %02d:%02d" % (data[clockHours], data[clockMinutes])
-		print "Air Temperature: ",data[airTemp]
-		print "Water Temperature: ",data[waterTemp]
-		print "Heater Temperature: ",data[heaterTemp]
+			t=time.localtime()
+			localtime = time.strftime("%H:%M",t)
+			print localtime
+			print "Pool Time: %02d:%02d" % (data[clockHours], data[clockMinutes])
+			print "Air Temperature: ",data[airTemp]
+			print "Water Temperature: ",data[waterTemp]
+			print "Heater Temperature: ",data[heaterTemp]
 
-		# TODO: not sure about any of this, still need to figure out
-		equip1="{0:08b}".format(data[11])
-		print "Equipment1: \t",equip1
-		equip2="{0:08b}".format(data[12])
-		print "Equipment2: \t",equip2
-		#print "Pool Pump: \t",state[int(equip[7:8])]
-		#print "Cleaner: \t",state[int(equip[6:7])]
-		#print "Pool Light: \t",state[int(equip[5:6])]
-		#print "Slow Speed: \t",state[int(equip[4:5])]
-		#updateVera(54,1,data[waterTemp])
-		#updateVera(54,2,data[airTemp])
-		#updateVera(54,3,state[int(equip[5:6])])
-		#updateVera(54,4,localtime)
-		print
+			equip1="{0:08b}".format(data[11])
+			print "Equipment1: \t",equip1
+			equip2="{0:08b}".format(data[12])
+			print "Equipment2: \t",equip2
+
+			print self.circuits
+
+			#print "Pool Pump: \t",state[int(equip[7:8])]
+			#print "Cleaner: \t",state[int(equip[6:7])]
+			#print "Pool Light: \t",state[int(equip[5:6])]
+			#print "Slow Speed: \t",state[int(equip[4:5])]
+			#updateVera(54,1,data[waterTemp])
+			#updateVera(54,2,data[airTemp])
+			#updateVera(54,3,state[int(equip[5:6])])
+			#updateVera(54,4,localtime)
+			print
 
