@@ -67,6 +67,9 @@ class controller(object):
 			d["pooltemp"] = self.pooltemp
 			d["spatemp"] = self.spatemp
 			d["hash"] = self.hash
+			# pool is the redis hash key, so you can do a 
+			# redis-cli hgetall pool
+			# to see all the data stored in redis
 			self.r.hmset( "pool", d )
 			self.oldhash = self.hash
 
