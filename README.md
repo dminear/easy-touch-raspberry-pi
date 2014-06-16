@@ -99,3 +99,23 @@ to be working.
 I am starting to understand Python a little bit better and how modules
 are defined and used in another python file. So far so good.
 
+2014-06-14
+
+Put together the outline of the commanding and threading tasks. So far,
+there is a serial thread that decodes the status messages and stores
+them to a redis database as a redis hash. It also listens to a command
+queue for command messages. I still have to implement the commands.
+These commands are put into the command queue by another thread that
+is a redis subscriber. The third thread is the http thread that will
+respond to queuies. If a request is posted (still to be implemented)
+from the http thread, it will be published to the redis queue, where
+it will be forwarded on to the serial thread.  The purpose for all this
+is that the redis subscriber is a blocking call, so that is why we
+use the Queue between the threads.
+
+All the structure is in place, and the http thread is sending NOP messages
+once a second. The serial thread sees these and sometimes has to process
+multiple messages because it is waiting for 50 serial bytes to come in
+before it begins processing.
+
+
