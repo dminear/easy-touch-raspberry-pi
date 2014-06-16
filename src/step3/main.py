@@ -42,14 +42,15 @@ httpT.start()
 cmdT.start()
 
 bExit = False
+print "Type 'exit' to exit."
 
 while not bExit:
 	try: 
-		line = sys.stdin.readline()
+		line = sys.stdin.readline().strip()
 
-		if line == "exit":
+		if line[0:4] == "exit":
 			bExit = True
-			break
+
 	except:
 		bExit=True
 	
