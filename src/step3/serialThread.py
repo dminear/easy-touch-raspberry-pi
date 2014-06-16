@@ -32,14 +32,14 @@ class cmdThread (threading.Thread):
 	def run(self):
 		for message in self.ps.listen():
 			if message['type'] == 'message':
-        		chan = message['channel']
-        		c = message['data']
-        		print "------ CMD: %s" % (c)
-        		cmdLock.acquire()
-        		cmdQueue.put(c)
-        		cmdLock.release()
-        	if self.exit == True:
-        		break
+				# chan = message['channel']
+				c = message['data']
+				print "------ CMD: %s" % (c)
+				cmdLock.acquire()
+				cmdQueue.put(c)
+				cmdLock.release()
+			if self.exit == True:
+				break
 
 
 class serialThread (threading.Thread):
