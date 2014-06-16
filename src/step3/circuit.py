@@ -36,7 +36,7 @@ class circuit (object):
 	def getName( self ):
 		return self.name
 
-	def getNumber:
+	def getNumber( self ):
 		return self.number
 
 	def getState( self ):
