@@ -12,6 +12,35 @@ import serial
 import string
 import sys
 import os
+import Queue
+import redis
+
+cmdLock = threading.Lock()
+cmdQueue = Queue.Queue(10)
+
+class cmdThread (threading.Thread):
+	def __init__(self):
+		self.exit = False
+		self.r = redis.StrictRedis( host='localhost', port=6379, db=0)
+		self.ps = self.r.pubsub()
+		self.ps.subscribe(['poolcmd'])
+		threading.Thread.__init__(self)
+
+	def stop(self):
+		self.exit = True
+
+	def run(self):
+		for message in self.ps.listen():
+			if message['type'] == 'message':
+        		# print message['channel']
+        		c = message['data']
+        		print "------ CMD: %s" % (c)
+        		cmdLock.acquire()
+        		cmdQueue.put(c)
+        		cmdLock.release()
+        	if self.exit == True:
+        		break
+
 
 class serialThread (threading.Thread):
 	def __init__(self, device, controller, p2):
@@ -86,7 +115,19 @@ class serialThread (threading.Thread):
 				# shift this off the front of inputBuffer
 				inputBuffer = inputBuffer[offsetlist[-1]:]
 
-				#print ascdata[begin:end]
+				# check for any action from http thread
+				if not cmdQueue.empty():
+					cmdLock.acquire()
+					if not cmdQueue.empty():
+						cmd = cmdQueue.get()
+					cmdLock.release()
+					# process command
+					self.processCommand( cmd )
+
+	def processCommand( self, cmd ):
+		# TODO do the work
+		print "serialThread: cmd is %s" % (c)
+		return True
 
 	def processMessage( self, message ):
 

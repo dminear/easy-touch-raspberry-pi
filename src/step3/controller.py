@@ -55,6 +55,7 @@ class controller(object):
 
 	# save to redis as a hash with values
 	def save( self ):
+		# only save if we have to
 		if self.oldhash == self.hash:
 			return False
 		else:

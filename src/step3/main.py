@@ -34,10 +34,12 @@ for k in circuits.keys():
 # in the redis database
 controller = controller.controller( circuitlist )
 serialT = serialThread.serialThread( '/dev/ttyAMA0', controller, 2)
+cmdT = serialThread.cmdThread()
 httpT = httpThread.httpThread(1,2)
 
 serialT.start()
 httpT.start()
+cmdT.start()
 
 bExit = False
 
@@ -58,5 +60,10 @@ while not bExit:
 
 # clean up and stop threads
 serialT.stop()
+cmdT.stop()
 httpT.stop()
+serialT.join()
+cmdT.join()
+httpT.join()
 
+print "Exiting main"
