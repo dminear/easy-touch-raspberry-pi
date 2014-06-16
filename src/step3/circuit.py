@@ -31,6 +31,26 @@ class circuit (object):
 		self.name = name
 		self.byte = equipmentbyte
 		self.bit = equipmentbit
+		self.value = 0
 
 	def getName( self ):
 		return self.name
+
+	def getState( self ):
+		return self.value
+
+	def setState( self, val ):
+		self.value = val
+		return self
+
+	def match( self, byte, bit):
+		if self.byte == byte and self.bit==bit:
+			return True
+		else
+			return False
+
+	def getHash( self ):
+		return self.number*1000+self.byte*100+self.bit*10+self.value
+
+
+

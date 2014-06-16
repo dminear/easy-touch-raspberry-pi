@@ -16,9 +16,10 @@ import os
 import redis
 
 class serialThread (threading.Thread):
-	def __init__(self, device, circuitlist, p2):
+	def __init__(self, device, controller, p2):
 		self.device = device
-		self.circuits = circuitlist
+		self.controller = controller
+		self.oldcontrollerhash = 0
 		self.p2 = p2
 		self.exit = False
 		threading.Thread.__init__(self)
@@ -144,21 +145,19 @@ class serialThread (threading.Thread):
 			print "Air Temperature: ",data[airTemp]
 			print "Water Temperature: ",data[waterTemp]
 			print "Heater Temperature: ",data[heaterTemp]
+			print
 
-			equip1="{0:08b}".format(data[11])
+			# update controller values
+			equip = []
+			equip[0] = "{0:08b}".format(data[11])
 			print "Equipment1: \t",equip1
-			equip2="{0:08b}".format(data[12])
+			equip[1] = "{0:08b}".format(data[12])
 			print "Equipment2: \t",equip2
 
-			print self.circuits
+			self.controller.setpooltemp( data[airTemp] )
+			self.controller.setairtemp( data[airTemp] )
+			for byte in range(2):
+				for bit in range(8):
+					self.controller.setcircuit(byte+1, bit, equip[byte][bit:bit+1] )
 
-			#print "Pool Pump: \t",state[int(equip[7:8])]
-			#print "Cleaner: \t",state[int(equip[6:7])]
-			#print "Pool Light: \t",state[int(equip[5:6])]
-			#print "Slow Speed: \t",state[int(equip[4:5])]
-			#updateVera(54,1,data[waterTemp])
-			#updateVera(54,2,data[airTemp])
-			#updateVera(54,3,state[int(equip[5:6])])
-			#updateVera(54,4,localtime)
-			print
 
