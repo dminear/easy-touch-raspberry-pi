@@ -20,5 +20,5 @@ class httpThread (threading.Thread):
 		while self.exit == False:
 			#print "http tick"
 			time.sleep(1)
-			r.publish("poolcmd", "NOP")
+			self.r.publish("poolcmd", "NOP")
 
