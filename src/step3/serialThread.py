@@ -116,7 +116,7 @@ class serialThread (threading.Thread):
 				inputBuffer = inputBuffer[offsetlist[-1]:]
 
 				# check for any action from http thread
-				if not cmdQueue.empty():
+				while not cmdQueue.empty():
 					cmdLock.acquire()
 					if not cmdQueue.empty():
 						cmd = cmdQueue.get()
