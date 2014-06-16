@@ -58,6 +58,7 @@ class controller(object):
 		if self.oldhash == self.hash:
 			return False
 		else:
+			print "------ STORING TO REDIS ---------"
 			d = {}
 			for c in self.circuitlist:
 				d[c.getNumber()] = c.getState()
