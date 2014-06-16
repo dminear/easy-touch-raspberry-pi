@@ -142,7 +142,7 @@ class serialThread (threading.Thread):
 			print "Pool Time: %02d:%02d" % (data[clockHours], data[clockMinutes])
 			print "Air Temperature: ",data[airTemp]
 			print "Water Temperature: ",data[waterTemp]
-			print "Heater Temperature: ",data[heaterTemp]
+			#print "Heater Temperature: ",data[heaterTemp]
 
 			# update controller values
 			equip = [ "{0:08b}".format(data[11]), "{0:08b}".format(data[12]) ]
