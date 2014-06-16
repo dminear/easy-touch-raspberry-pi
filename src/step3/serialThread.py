@@ -7,13 +7,11 @@
 
 import threading
 import thread
-#import urllib
 import time
 import serial
 import string
 import sys
 import os
-import redis
 
 class serialThread (threading.Thread):
 	def __init__(self, device, controller, p2):
@@ -156,5 +154,6 @@ class serialThread (threading.Thread):
 			for byte in range(2):
 				for bit in range(8):
 					self.controller.setcircuit(byte+1, bit, equip[byte][bit:bit+1] )
+			self.controller.save()		# to database
 
 
