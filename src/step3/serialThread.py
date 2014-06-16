@@ -126,7 +126,7 @@ class serialThread (threading.Thread):
 
 	def processCommand( self, cmd ):
 		# TODO do the work
-		print "serialThread: cmd is %s" % (c)
+		print "serialThread: cmd is %s" % (cmd)
 		return True
 
 	def processMessage( self, message ):
