@@ -46,11 +46,14 @@ class circuit (object):
 	def match( self, byte, bit):
 		if self.byte == byte and self.bit==bit:
 			return True
-		else
+		else:
 			return False
 
 	def getHash( self ):
-		return self.number*1000+self.byte*100+self.bit*10+self.value
+		return (int(self.number) * 1000 +
+			int(self.byte) * 100 +
+			int(self.bit) * 10 +
+			int(self.value))
 
 
 

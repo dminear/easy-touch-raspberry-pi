@@ -26,9 +26,9 @@ class controller(object):
 			self.airtemp = temp
 			self.updatehash()
 
-	def updatehash():
+	def updatehash(self):
 		h = 0
-		for a in circuitlist:
+		for a in self.circuitlist:
 			h += a.getHash()
 		h += self.pooltemp * 1000
 		h += self.spatemp * 100

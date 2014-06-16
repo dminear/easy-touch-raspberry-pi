@@ -145,14 +145,11 @@ class serialThread (threading.Thread):
 			print "Air Temperature: ",data[airTemp]
 			print "Water Temperature: ",data[waterTemp]
 			print "Heater Temperature: ",data[heaterTemp]
-			print
 
 			# update controller values
-			equip = []
-			equip[0] = "{0:08b}".format(data[11])
-			print "Equipment1: \t",equip1
-			equip[1] = "{0:08b}".format(data[12])
-			print "Equipment2: \t",equip2
+			equip = [ "{0:08b}".format(data[11]), "{0:08b}".format(data[12]) ]
+			for i in range(len(equip)):
+				print "Equipment", i, ": ", equip[i]
 
 			self.controller.setpooltemp( data[airTemp] )
 			self.controller.setairtemp( data[airTemp] )
