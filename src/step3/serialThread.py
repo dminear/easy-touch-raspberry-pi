@@ -190,7 +190,7 @@ class serialThread (threading.Thread):
 			for i in range(len(equip)):
 				print "Equipment", i, ": ", equip[i]
 
-			self.controller.setpooltemp( data[airTemp] )
+			self.controller.setpooltemp( data[waterTemp] )
 			self.controller.setairtemp( data[airTemp] )
 			for byte in range(2):
 				for bit in range(8):
