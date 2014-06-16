@@ -32,7 +32,7 @@ class cmdThread (threading.Thread):
 	def run(self):
 		for message in self.ps.listen():
 			if message['type'] == 'message':
-        		# print message['channel']
+        		chan = message['channel']
         		c = message['data']
         		print "------ CMD: %s" % (c)
         		cmdLock.acquire()
