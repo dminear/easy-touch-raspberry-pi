@@ -4,12 +4,15 @@ import threading
 import thread
 import time
 import redis
+import controller
 
 class httpThread (threading.Thread):
 	def __init__(self, p1, p2):
 		self.p1 = p1
 		self.p2 = p2
 		self.exit = False
+		self.controller = controller.controller( [] )
+		self.controller.load()		# from redis
 		self.r = redis.StrictRedis( host='localhost', port=6379, db=0)
 		threading.Thread.__init__(self)
 

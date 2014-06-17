@@ -58,5 +58,13 @@ class circuit (object):
 			int(self.bit) * 10 +
 			int(self.value))
 
+	# return dictionary
+	def todict( self ):
+		return ( { "name":self.name,
+				"byte":self.byte,
+				"bit":self.bit,
+				"value":self.value })
+
+
 
 

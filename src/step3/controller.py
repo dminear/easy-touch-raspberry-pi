@@ -3,6 +3,7 @@
 
 import circuit
 import redis
+import json
 
 class controller(object):
 	def __init__( self, circuitlist ):
@@ -59,10 +60,9 @@ class controller(object):
 		if self.oldhash == self.hash:
 			return False
 		else:
-			print "------ STORING TO REDIS ---------"
 			d = {}
 			for c in self.circuitlist:
-				d[c.getNumber()] = c.getState()
+				d[c.getNumber()] = json.dumps(c.todict())
 			d["airtemp"] = self.airtemp
 			d["pooltemp"] = self.pooltemp
 			d["spatemp"] = self.spatemp
@@ -73,6 +73,29 @@ class controller(object):
 			self.r.hmset( "pool", d )
 			self.oldhash = self.hash
 
+	def load( self ):
+		# get dictionary from redis
+		d = self.r.hgetall( "pool" )
+		# and sort it all out
+		self.circuitlist = []		# empty
+		for k in d.keys():
+			if k == "hash":
+				self.hash = d[k]
+			elif k == "airtemp":
+				self.airtemp = d[k]
+			elif k == "pooltemp":
+				self.pooltemp = d[k]
+			elif k == "spatemp":
+				self.spatemp = d[k]
+			elif int(k) > 0 and int(k) < 16:		# circuit
+				# decode json sting
+				cdict = json.loads(d[k])				
+				self.circuitlist.append( circuit.circuit(k,
+								cdict["name"],
+								cdict["byte"],
+								cdict["bit"] ))
+			else:
+				print "bad key %s found in load" % k
+		self.oldhash = self.hash
 
-
-
+		
