@@ -42,7 +42,7 @@ httpT.start()
 cmdT.start()
 
 bExit = False
-print "Type 'exit' to exit."
+print "Type CTRL-z to background, then kill the job to exit. This is usually 'kill %1'"
 
 while not bExit:
 	try: 
