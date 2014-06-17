@@ -46,6 +46,7 @@ class httpServHandler( BaseHTTPServer.BaseHTTPRequestHandler):
 		#execfile(self.path, self.globals)
 			
 
+		httpcontroller.load()
 		self.wfile.write( "<p>Air temp is %d</p>" % ( int(httpcontroller.getairtemp())))
 		self.wfile.write( "<p>Pool temp is %d</p>" % ( int(httpcontroller.getpooltemp())))
 		self.wfile.write( "<p>Spa temp is %d</p>" % ( int(httpcontroller.getspatemp())))
