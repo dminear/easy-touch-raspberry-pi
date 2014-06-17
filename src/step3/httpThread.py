@@ -15,6 +15,13 @@ httpcontroller.load()		# from redis
 
 httpr = redis.StrictRedis( host='localhost', port=6379, db=0)
 
+#
+# The HTTP code snippet is from "Python PHRASEBOOK" by Brad Dayley copyright
+#  2007 by Sams Publishing.  It is a good little book that seems to have
+# enough of what you need to do something, and then you can check the python
+# docs for more.
+#
+
 class httpServHandler( BaseHTTPServer.BaseHTTPRequestHandler):
 	def do_GET(self):
 		if self.path.find('?') != -1:
