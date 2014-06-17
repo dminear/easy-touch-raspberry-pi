@@ -194,7 +194,8 @@ class serialThread (threading.Thread):
 			self.controller.setairtemp( data[airTemp] )
 			for byte in range(2):
 				for bit in range(8):
-					self.controller.setcircuit(byte+1, bit, equip[byte][bit:bit+1] )
+					abit = 7 - bit
+					self.controller.setcircuit(byte+1, bit, equip[byte][abit:abit+1] )
 			self.controller.save()		# to database
 
 

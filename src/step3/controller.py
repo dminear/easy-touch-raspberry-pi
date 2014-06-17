@@ -57,6 +57,8 @@ class controller(object):
 		retval = False
 		for c in self.circuitlist:
 			if c.match( equipbyte, equipbit ):
+				if val == 1:
+					print "setting %s to %s" % (c.getname, val)
 				c.setState( val )
 				self.updatehash()
 				retval = True
@@ -105,7 +107,8 @@ class controller(object):
 				self.circuitlist.append( circuit.circuit(k,
 								cdict["name"],
 								cdict["byte"],
-								cdict["bit"] ))
+								cdict["bit"],
+								cdict["value"] ))
 			else:
 				print "bad key %s found in load" % k
 		self.oldhash = self.hash

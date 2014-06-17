@@ -26,7 +26,8 @@ for k in circuits.keys():
 	circuitlist.append( circuit.circuit( 	k,
 						circuits[k]['name'],
 						circuits[k]['byte'],
-						circuits[k]['bit']
+						circuits[k]['bit'],
+						0
 						))
 
 

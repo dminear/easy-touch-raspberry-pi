@@ -26,12 +26,12 @@ bit 0 - spa light
 '''
 
 class circuit (object):
-	def __init__(self, number, name, equipmentbyte, equipmentbit):
+	def __init__(self, number, name, equipmentbyte, equipmentbit, val):
 		self.number = number
 		self.name = name
 		self.byte = equipmentbyte
 		self.bit = equipmentbit
-		self.value = 0
+		self.value = val
 
 	def getName( self ):
 		return self.name
