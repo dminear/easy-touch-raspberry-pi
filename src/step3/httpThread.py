@@ -2,18 +2,12 @@
 
 import threading
 import thread
-import time
-import redis
-import controller
 import BaseHTTPServer, cgi
-import json
+import sys
+import os.path
 
 servAddr = ('', 8080)
 
-httpcontroller = controller.controller( [] )
-httpcontroller.load()		# from redis
-
-httpr = redis.StrictRedis( host='localhost', port=6379, db=0)
 
 #
 # The HTTP code snippet is from "Python PHRASEBOOK" by Brad Dayley copyright
@@ -36,31 +30,28 @@ class httpServHandler( BaseHTTPServer.BaseHTTPRequestHandler):
 		self.globals = dict(cgi.parse_qsl(self.query_string))
 	
 		# redirect output to browser
-		#sys.stdout = self.wfile	
+		stdsave = sys.stdout
+		sys.stdout = self.wfile	
 
 		# execute script
 		self.wfile.write("<html><head><title>Pool Controller</title></head><body>")
 		self.wfile.write("<h2>Pool Controller</h2>")
-		self.wfile.write("<p>Executing %s </p>" % (self.path))
-		self.wfile.write("<p>with globals %s<hr>" % (self.globals))
-		#execfile(self.path, self.globals)
-			
+		if self.path == "" or self.path == "/":
+			self.path = "index.py"
+			print "path is ", self.path
 
-		httpcontroller.load()
-		self.wfile.write( "<p>Air temp is %d</p>" % ( int(httpcontroller.getairtemp())))
-		self.wfile.write( "<p>Pool temp is %d</p>" % ( int(httpcontroller.getpooltemp())))
-		self.wfile.write( "<p>Spa temp is %d</p>" % ( int(httpcontroller.getspatemp())))
-		cl = httpcontroller.getcircuitlist()
-		state = ['OFF', 'ON']
-		for c in cl:
-			self.wfile.write("%s circuit %s is %s</br>" % (c.getName(),
-									c.getNumber(), 
-									state[int(c.getState())]))
-		
+		# check that file is there before running
+		if os.path.isfile(self.path):
+			self.wfile.write("<p>Executing %s </p>" % (self.path))
+			self.wfile.write("<p>with globals %s<hr>" % (self.globals))
+			execfile(self.path, self.globals)
+		else:
+			self.wfile.write("script %s not found" % (self.path))
+
 		self.wfile.write( "</body></html>" )
 
 		# test to send back command from http thread
-		httpr.publish("poolcmd", "NOP")
+		sys.stdout = stdsave	# put back
 
 
 
