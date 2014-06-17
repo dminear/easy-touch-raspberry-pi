@@ -30,6 +30,15 @@ class controller(object):
 			self.airtemp = temp
 			self.updatehash()
 
+	def getpooltemp( self ):
+		return self.pooltemp
+
+	def getspatemp( self ):
+		return self.spatemp
+
+	def getairtemp( self ):
+		return self.airtemp
+
 	def updatehash(self):
 		h = 0
 		for a in self.circuitlist:
@@ -53,6 +62,9 @@ class controller(object):
 				retval = True
 				break
 		return retval
+
+	def getcircuitlist( self ):
+		return self.circuitlist
 
 	# save to redis as a hash with values
 	def save( self ):
