@@ -126,3 +126,7 @@ the IP address is and port 8080. There's still some debug stuff going on,
 but that will be cleaned up later. Still need to handle the POST message
 and send that via redis pub/sub to serial thread.
 
+Because the http thread does a serve_forever(), it seems the best way to
+stop the thing is to CTRL-z to background the process and then kill it
+with a "kill %<jobnumber>", which is usually "kill %1". It would be nice
+to find a way for the HTTPServer to stop.
