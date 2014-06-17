@@ -19,5 +19,5 @@ for c in cl:
 	print("%s circuit %s is %s</br>" % (c.getName(), c.getNumber(), state[int(c.getState())]))
 
 # test to send back command from http thread
-	httpr.publish("poolcmd", "NOP")
+httpr.publish("poolcmd", "NOP")
 
