@@ -118,4 +118,11 @@ once a second. The serial thread sees these and sometimes has to process
 multiple messages because it is waiting for 50 serial bytes to come in
 before it begins processing.
 
+2014-06-16
+
+Added the display of the pool state to the web page, which is found
+at http://localhost:8080 (on the Raspberry Pi), or navigate to whatever
+the IP address is and port 8080. There's still some debug stuff going on,
+but that will be cleaned up later. Still need to handle the POST message
+and send that via redis pub/sub to serial thread.
 
