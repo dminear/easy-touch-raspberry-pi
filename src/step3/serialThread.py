@@ -33,10 +33,9 @@ class cmdThread (threading.Thread):
 		for message in self.ps.listen():
 			if message['type'] == 'message':
 				# chan = message['channel']
-				c = message['data']
-				print "------ CMD: %s" % (c)
+				command = message['data']
 				cmdLock.acquire()
-				cmdQueue.put(c)
+				cmdQueue.put(command)
 				cmdLock.release()
 			if self.exit == True:
 				break

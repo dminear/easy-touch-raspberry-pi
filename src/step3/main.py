@@ -18,7 +18,8 @@ circuits = {	1 : { 'name' : 'pool light', 'byte' : 1, 'bit' : 7 },
 		5 : { 'name' : 'spillway', 'byte' : 1, 'bit' : 3 },
 		6 : { 'name' : 'jets 2', 'byte' : 1, 'bit' : 2 },
 		7 : { 'name' : 'jets 1', 'byte' : 1, 'bit' : 1 },
-		8 : { 'name' : 'spa light', 'byte' : 2, 'bit' : 0 },
+		8 : { 'name' : 'spa', 'byte' : 1, 'bit' : 0 },
+		9 : { 'name' : 'spa light', 'byte' : 2, 'bit' : 0 },
 	}
 
 circuitlist=[]
