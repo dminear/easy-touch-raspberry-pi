@@ -74,29 +74,17 @@ class httpServHandler( BaseHTTPServer.BaseHTTPRequestHandler):
 			infile.close()
 
 	def do_POST(self):
-		if self.path.find('?') != -1:
-			self.path, self.query_string = self.path.split('?',1)
-		else:
-			self.query_string = ''
+		self.query_string = self.rfile.read(int(self.headers['Content-Length']))
+		self.args = dict(cgi.parse_qsl(self.query_string))
 
-		# set up global environment
-		self.globals = dict(cgi.parse_qsl(self.query_string))
 	
-		# execute script
-		if self.path == "" or self.path == "/":
-			self.path = "/index.py"
-	
-		self.path = self.path[1:]	# strip off leading /
-
-		
 		self.send_response(200)
 		self.send_header('Content-type', 'text/html')
 		self.end_headers()
 		self.wfile.write('<html><head><title>Post page</title></head><body>')
 		
-		self.wfile.write("<pre>")
-
-		#self.wfile.write( self.rfile.read() )
+		self.wfile.write("<p>Location is %s</p>" % (self.path))
+		self.wfile.write("<p>args are %s</p>" % (self.args))
 
 		self.wfile.write("</pre>")
 		self.wfile.write('</body></html>')
