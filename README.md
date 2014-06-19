@@ -130,3 +130,18 @@ Because the http thread does a serve_forever(), it seems the best way to
 stop the thing is to CTRL-z to background the process and then kill it
 with a "kill %<jobnumber>", which is usually "kill %1". It would be nice
 to find a way for the HTTPServer to stop.
+
+2014-06-18
+
+Started work on the change.py script which is the post action from the
+status page. Need to build the changes and send them as commands to the
+redis pubsub channel.
+
+Also, both the index and change pages output and accept JSON messages
+if the query string includes '?json=1', so a JSON request would be to
+http://localhost:8080/?json=1 (by default, if no page is specified then
+/ turns into index.py, to you could also use
+http://localhost:8080/index.py?json=1 to get a json configuration back.
+Note that the mime type is application/json, so don't get fooled by that.
+
+

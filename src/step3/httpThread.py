@@ -31,6 +31,7 @@ class httpServHandler( BaseHTTPServer.BaseHTTPRequestHandler):
 
 		# set up global environment
 		self.globals = dict(cgi.parse_qsl(self.query_string))
+		self.globals["method"] = "GET"
 	
 		# execute script
 		if self.path == "" or self.path == "/":
@@ -42,8 +43,16 @@ class httpServHandler( BaseHTTPServer.BaseHTTPRequestHandler):
 		if os.path.isfile(self.path) and self.path[-2:] == "py":
 			# run the script
 			self.send_response(200)
-			self.send_header('Content-type', 'text/html')
+			try:
+				if self.globals["json"]:
+					type = 'application/json'
+				else:
+					type = 'text/html'
+			except:
+				type = 'text/html'
+			self.send_header('Content-type', type)
 			self.end_headers()
+
 			# redirect output to browser
 			stdsave = sys.stdout
 			sys.stdout = self.wfile	
@@ -74,15 +83,33 @@ class httpServHandler( BaseHTTPServer.BaseHTTPRequestHandler):
 			infile.close()
 
 	def do_POST(self):
+		if self.path.find('?') != -1:
+			self.path, parms = self.path.split('?',1)
+		else:
+			parms = ''
+
 		self.query_string = self.rfile.read(int(self.headers['Content-Length']))
 		self.args = dict(cgi.parse_qsl(self.query_string))
+		# add key for benefit of called script
+		self.args["method"] = "POST"
 
-	
+		
+		urlparms = dict(cgi.parse_qsl(parms))
+		try:
+			if urlparms['json']:
+				jsonrequest = True
+				self.args["json"] = 1
+			else:
+				jsonrequest = False
+		except:
+			jsonrequest = False
+		self.path = self.path[1:]	# strip off leading /
+		'''
 		self.send_response(200)
 		self.send_header('Content-type', 'text/html')
 		self.end_headers()
 		self.wfile.write('<html><head><title>Post page</title></head><body>')
-		
+
 		self.wfile.write("<p>Location is %s</p>" % (self.path))
 		self.wfile.write("<p>args are %s</p>" % (self.args))
 
@@ -94,29 +121,18 @@ class httpServHandler( BaseHTTPServer.BaseHTTPRequestHandler):
 		if os.path.isfile(self.path) and self.path[-2:] == "py":
 			# run the script
 			self.send_response(200)
-			self.send_header('Content-type', 'text/html')
+			if jsonrequest:
+				self.send_header('Content-type', 'application/json')
+			else:
+				self.send_header('Content-type', 'text/html')
 			self.end_headers()
 			# redirect output to browser
 			stdsave = sys.stdout
 			sys.stdout = self.wfile	
 			#self.wfile.write("<p>Executing %s </p>" % (self.path))
 			#self.wfile.write("<p>with globals %s<hr>" % (self.globals))
-			execfile(self.path, self.globals)
+			execfile(self.path, self.args)
 			sys.stdout = stdsave	# put back
-
-		elif os.path.isfile(self.path):
-			# find mime type
-			if self.path.find('.') != -1:
-				filename, ext = self.path.split('.',1)
-			else:
-				ext = "txt"
-			# a existing file, just send it
-			self.send_response(200)
-			self.send_header('Content-type', mimedict[ext])
-			self.end_headers()
-			infile = open(self.path, "r")
-			self.wfile.write( infile.read() )
-			infile.close()
 		else:	# not found
 			self.send_response(404)
 			self.send_header('Content-type', 'text/html')
@@ -124,8 +140,6 @@ class httpServHandler( BaseHTTPServer.BaseHTTPRequestHandler):
 			infile = open("404", "r")
 			self.wfile.write( infile.read() )
 			infile.close()
-'''
-
 
 class httpThread (threading.Thread):
 	def __init__(self, p1, p2):

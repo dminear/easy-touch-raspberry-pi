@@ -26,8 +26,8 @@ try:
 			#print("%s circuit %s is %s</br>" % (c.getName(), c.getNumber(), state[int(c.getState())]))
 
 		print jsonmod.dumps(d)
-
 except:		# json not defined, give a text/html response
+
 	print '''<html>
 <head>
 <title>Pool Controller</title>
