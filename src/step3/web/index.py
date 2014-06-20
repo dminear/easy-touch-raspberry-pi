@@ -31,25 +31,13 @@ except:		# json not defined, give a text/html response
 <title>Pool Controller</title>
 </head>
 <body>
-
-<h2>Pool Controller</h2>
 '''
-
-	print( "<p>Air temp is %d</p>" % ( int(httpcontroller.getairtemp())))
-	print( "<p>Pool temp is %d</p>" % ( int(httpcontroller.getpooltemp())))
-	print( "<p>Spa temp is %d</p>" % ( int(httpcontroller.getspatemp())))
-	cl = httpcontroller.getcircuitlist()
-	state = ['OFF', 'ON']
-	for c in cl:
-		print("%s circuit %s is %s</br>" % (c.getName(), c.getNumber(), state[int(c.getState())]))
-
-	print '''
-<hr>
-<form name="input" method="post" action="change.py">
-'''
+	print '<form name="input" method="post" action="change.py">'
+	print "<span>Air temp is %d</span></br>" % ( int(httpcontroller.getairtemp()))
 	print '<span>Pool Temperature: <input type="text" name="pooltemp" value="%s"></span></br>' % (httpcontroller.getpooltemp())
 	print '<span>Spa Temperature: <input type="text" name="spatemp" value="%s"></span></br>' % (httpcontroller.getspatemp())
 
+	cl = httpcontroller.getcircuitlist()
 	for c in cl:
 		if c.getState() == "1":
 			val = "CHECKED"
@@ -60,5 +48,14 @@ except:		# json not defined, give a text/html response
 	print '''
 <input type="submit" value="Submit">
 </form>
+<hr>
+'''
+	print( "<p>Air temp is %d</p>" % ( int(httpcontroller.getairtemp())))
+	print( "<p>Pool temp is %d</p>" % ( int(httpcontroller.getpooltemp())))
+	print( "<p>Spa temp is %d</p>" % ( int(httpcontroller.getspatemp())))
+	state = ['OFF', 'ON']
+	for c in cl:
+		print("%s circuit %s is %s</br>" % (c.getName(), c.getNumber(), state[int(c.getState())]))
+	print '''
 </body></html>
 '''

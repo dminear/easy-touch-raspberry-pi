@@ -211,16 +211,13 @@ class serialThread (threading.Thread):
 			for y in range(length+9+2):
 				sys.stdout.write( "%02x " % message[y] )
 			print
-
-			print "dest %d, src %d, cmd %d, len %d, chksum %02x %02x" % (dest, src, cmd, length, chksum / 0x100, chksum % 0x100)
-			print
+			print " dest %02x, src %02x, cmd %02x, len %02x, chksum %02x %02x" % (dest, src, cmd, length, chksum / 0x100, chksum % 0x100)
 
 		if dest == 0x0f and src == 0x10 and cmd == 0x02 and length == 0x1d and chksum == chkhi*256+chklo:	# status
 			self.decodeStatus( message )
 	
 
 	def decodeStatus( self, data ):
-			state=["OFF","ON"]
 			waterTemp=23
 			heaterTemp=24
 			airTemp=27
@@ -229,17 +226,15 @@ class serialThread (threading.Thread):
 
 			t=time.localtime()
 			localtime = time.strftime("%H:%M",t)
-			print localtime
-			print "Pool Time: %02d:%02d" % (data[clockHours], data[clockMinutes])
-			print "Air Temperature: ",data[airTemp]
-			print "Water Temperature: ",data[waterTemp]
-			#print "Heater Temperature: ",data[heaterTemp]
+			print "  Wallclock %s, Pool Time %02d:%02d" % (localtime, data[clockHours], data[clockMinutes])
+			#print "  Air %s, Water %s" % (data[airTemp], data[waterTemp])
+			#print "  Heater Temperature: ",data[heaterTemp]
 
-			# update controller values
 			equip = [ "{0:08b}".format(data[11]), "{0:08b}".format(data[12]) ]
 			for i in range(len(equip)):
-				print "Equipment", i, ": ", equip[i]
+				print "  Equipment", i, ": ", equip[i]
 
+			# update controller values
 			self.controller.setpooltemp( data[waterTemp] )
 			self.controller.setairtemp( data[airTemp] )
 			for byte in range(2):
