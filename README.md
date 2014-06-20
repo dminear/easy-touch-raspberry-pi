@@ -144,4 +144,144 @@ http://localhost:8080/?json=1 (by default, if no page is specified then
 http://localhost:8080/index.py?json=1 to get a json configuration back.
 Note that the mime type is application/json, so don't get fooled by that.
 
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
+2014-06-19
+
+Implemented the full loop control, so now the form on the web page ends up
+sending a message to the serial thread, which builds a packet and sends
+it out the RS-485 port. Cool! I need to figure out the temperature settings
+now and see how to change the temperature -- mainly for the spa!
+
 
