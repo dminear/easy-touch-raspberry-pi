@@ -62,7 +62,3 @@ except:		# json not defined, give a text/html response
 </form>
 </body></html>
 '''
-
-	# test to send back command from http thread
-	httpr.publish("poolcmd", "NOP")
-

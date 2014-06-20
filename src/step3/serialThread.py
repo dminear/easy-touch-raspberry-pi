@@ -14,9 +14,25 @@ import sys
 import os
 import Queue
 import redis
+import array
 
 cmdLock = threading.Lock()
 cmdQueue = Queue.Queue(10)
+
+# this is a mapping from channel number to remote channel code that goes out
+# on bus. This corresponds to the stickers on the remote
+#      circuit programmed : value out on RS-485 bus
+remotebuttonmap = { 
+			1 : 1,
+			2 : 6,
+			3 : 2,
+			4 : 3,
+			5 : 4,
+			6 : 5,
+			7 : 7,
+			8 : 8,
+			9 : 9
+		}
 
 class cmdThread (threading.Thread):
 	def __init__(self):
@@ -59,11 +75,6 @@ class serialThread (threading.Thread):
 		scanlen = 100
 		inputBuffer = []
 		while self.exit == False:
-
-			#ser = serial.Serial('/dev/ttyAMA0', baudrate=9600, timeout=3)
-
-			#ascdata=""
- 			#data=[]
 			
 			output = self.ser.read(scanlen)
 			for i in output:
@@ -124,8 +135,50 @@ class serialThread (threading.Thread):
 					self.processCommand( cmd )
 
 	def processCommand( self, cmd ):
-		# TODO do the work
-		print "serialThread: cmd is %s" % (cmd)
+		# command is of the form:  SET CIRCUIT 1 0
+		action, object, num, val = cmd.split()
+
+		if action == "SET":		# continue
+			if object == "CIRCUIT":		# do circuit functions
+				if int(num) > 0 and int(num) < 19:	# valid circuit numbers
+					# check value
+					nval = int(val)
+					# nval can be 0 or 1
+					if nval > 1:
+						nval = 1
+					# look up mapping from circuit number to command circuit
+					cmdchannel = remotebuttonmap[int(num)]
+					
+					# now form packet
+					header = [ 0xFF, 0xFF, 0x00, 0xFF, 0xA5, 0x07, 0x10, 0x20 ]
+					command = [ 0x86 ]
+					length = [ 0x02 ]
+					args = [ cmdchannel, nval ]
+
+					output = header + command + length + args
+					# compute checksum
+					chksum = 0
+					for i in range(4,len(output)):
+						chksum += output[i]
+					chkhi = int(chksum / 256)
+					chklo = int(chksum % 256)
+
+					output += [chkhi, chklo, 0xff, 0xff]
+				
+					print "-----------------output packet-------------"
+					for i in output:
+						sys.stdout.write( "%02x " % i )
+					print
+					print	
+					# now make string and write it out
+					packet = array.array('B', output).tostring()
+					print "length of packet is %d" % len(packet)
+					
+					self.ser.write(packet)
+					time.sleep(0.3)
+					self.ser.write(packet)
+					time.sleep(0.3)
+					
 		return True
 
 	def processMessage( self, message ):
@@ -146,7 +199,6 @@ class serialThread (threading.Thread):
 	
 		chksum = 0;
 		if len(message) >= length + 9 + 2:	# good
-	
 			#compute checksum
 			for x in range( 3, 8 + length + 1):	# 8 bytes + len + 1 for range func
 				chksum += message[x];
