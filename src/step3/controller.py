@@ -43,22 +43,25 @@ class controller(object):
 		h = 0
 		for a in self.circuitlist:
 			h += a.getHash()
-		h += self.pooltemp * 1000
-		h += self.spatemp * 100
-		h += self.airtemp * 10
+		h += int(self.pooltemp) * 1000
+		h += int(self.spatemp) * 100
+		h += int(self.airtemp) * 10
 		self.hash = h
 		return h
 
 	def gethash( self ):
 		return self.hash
+	
+	def appendcircuit( self, c ):
+		self.circuitlist.append( c )
 
 	def setcircuit( self, equipbyte, equipbit, val ):
 		# find circuit and set to val
 		retval = False
 		for c in self.circuitlist:
 			if c.match( equipbyte, equipbit ):
-				if val == 1:
-					print "setting %s to %s" % (c.getname, val)
+				#if val == 1:
+				#	print "setting %s to %s" % (c.getname, val)
 				c.setState( val )
 				self.updatehash()
 				retval = True
@@ -67,6 +70,12 @@ class controller(object):
 
 	def getcircuitlist( self ):
 		return self.circuitlist
+
+	def getcircuitnumstate( self, circuitnum ):
+		for c in self.circuitlist:
+			if c.getNumber() == circuitnum:
+				return c.getState()
+		return -1	# not found
 
 	# save to redis as a hash with values
 	def save( self ):

@@ -167,7 +167,6 @@ class serialThread (threading.Thread):
 			self.decodeStatus( message )
 	
 
-
 	def decodeStatus( self, data ):
 			state=["OFF","ON"]
 			waterTemp=23

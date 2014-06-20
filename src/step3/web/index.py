@@ -23,8 +23,6 @@ try:
 		for c in cl:
 			d["circuit%s" % (c.getNumber())] = c.todict()
 
-			#print("%s circuit %s is %s</br>" % (c.getName(), c.getNumber(), state[int(c.getState())]))
-
 		print jsonmod.dumps(d)
 
 except:		# json not defined, give a text/html response
@@ -53,7 +51,11 @@ except:		# json not defined, give a text/html response
 	print '<span>Spa Temperature: <input type="text" name="spatemp" value="%s"></span></br>' % (httpcontroller.getspatemp())
 
 	for c in cl:
-		print( '<span><input type="checkbox" name="circuit%s" value="%s">%s</span></br>' % ( c.getNumber(), c.getState(), c.getName().capitalize() ))
+		if c.getState() == "1":
+			val = "CHECKED"
+		else:
+			val = ""
+		print( '<span><input type="checkbox" name="circuit%s" value="1" %s>%s</span></br>' % ( c.getNumber(), val, c.getName().capitalize() ))
 
 	print '''
 <input type="submit" value="Submit">

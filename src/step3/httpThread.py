@@ -93,17 +93,17 @@ class httpServHandler( BaseHTTPServer.BaseHTTPRequestHandler):
 		# add key for benefit of called script
 		self.args["method"] = "POST"
 
-		
 		urlparms = dict(cgi.parse_qsl(parms))
 		try:
 			if urlparms['json']:
 				jsonrequest = True
 				self.args["json"] = 1
-			else:
-				jsonrequest = False
 		except:
 			jsonrequest = False
 		self.path = self.path[1:]	# strip off leading /
+		# so it is available to the called script
+		self.args["query_string"] = self.query_string
+
 		'''
 		self.send_response(200)
 		self.send_header('Content-type', 'text/html')
@@ -129,8 +129,6 @@ class httpServHandler( BaseHTTPServer.BaseHTTPRequestHandler):
 			# redirect output to browser
 			stdsave = sys.stdout
 			sys.stdout = self.wfile	
-			#self.wfile.write("<p>Executing %s </p>" % (self.path))
-			#self.wfile.write("<p>with globals %s<hr>" % (self.globals))
 			execfile(self.path, self.args)
 			sys.stdout = stdsave	# put back
 		else:	# not found
