@@ -235,7 +235,7 @@ class serialThread (threading.Thread):
 				print "  Equipment", i, ": ", equip[i]
 
 			# update controller values
-			self.controller.setpooltemp( data[waterTemp] )
+			self.controller.setwatertemp( data[waterTemp] )
 			self.controller.setairtemp( data[airTemp] )
 			for byte in range(2):
 				for bit in range(8):

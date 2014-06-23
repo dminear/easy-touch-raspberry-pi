@@ -8,21 +8,27 @@ import json
 class controller(object):
 	def __init__( self, circuitlist ):
 		self.circuitlist = circuitlist
-		self.pooltemp = 70		# deg F
-		self.spatemp = 70		# deg F
+		self.watertemp = 70		# deg F
+		self.spasettemp = 70		# deg F
+		self.poolsettemp = 70		# deg F
 		self.airtemp = 70		# deg F
 		self.hash = 0			# for caching
 		self.oldhash = 1
 		self.r = redis.StrictRedis( host='localhost', port=6379, db=0)
 
-	def setpooltemp( self, temp ):
-		if self.pooltemp != temp:
-			self.pooltemp = temp
+	def setwatertemp( self, temp ):
+		if self.watertemp != temp:
+			self.watertemp = temp
 			self.updatehash()
 
-	def setspatemp( self, temp ):
-		if self.spatemp != temp:
-			self.spatemp = temp
+	def setspasettemp( self, temp ):
+		if self.spasettemp != temp:
+			self.spasettemp = temp
+			self.updatehash()
+
+	def setpoolsettemp( self, temp ):
+		if self.poolsettemp != temp:
+			self.poolsettemp = temp
 			self.updatehash()
 
 	def setairtemp( self, temp ):
@@ -30,11 +36,14 @@ class controller(object):
 			self.airtemp = temp
 			self.updatehash()
 
-	def getpooltemp( self ):
-		return self.pooltemp
+	def getwatertemp( self ):
+		return self.watertemp
 
-	def getspatemp( self ):
-		return self.spatemp
+	def getspasettemp( self ):
+		return self.spasettemp
+
+	def getpoolsettemp( self ):
+		return self.poolsettemp
 
 	def getairtemp( self ):
 		return self.airtemp
@@ -43,8 +52,9 @@ class controller(object):
 		h = 0
 		for a in self.circuitlist:
 			h += a.getHash()
-		h += int(self.pooltemp) * 1000
-		h += int(self.spatemp) * 100
+		h += int(self.watertemp) * 1000
+		h += int(self.spasettemp) * 100
+		h += int(self.poolsettemp) * 50
 		h += int(self.airtemp) * 10
 		self.hash = h
 		return h
@@ -87,8 +97,9 @@ class controller(object):
 			for c in self.circuitlist:
 				d[c.getNumber()] = json.dumps(c.todict())
 			d["airtemp"] = self.airtemp
-			d["pooltemp"] = self.pooltemp
-			d["spatemp"] = self.spatemp
+			d["watertemp"] = self.watertemp
+			d["spasettemp"] = self.spasettemp
+			d["poolsettemp"] = self.poolsettemp
 			d["hash"] = self.hash
 			# pool is the redis hash key, so you can do a 
 			# redis-cli hgetall pool
@@ -106,10 +117,12 @@ class controller(object):
 				self.hash = d[k]
 			elif k == "airtemp":
 				self.airtemp = d[k]
-			elif k == "pooltemp":
-				self.pooltemp = d[k]
-			elif k == "spatemp":
-				self.spatemp = d[k]
+			elif k == "watertemp":
+				self.watertemp = d[k]
+			elif k == "spasettemp":
+				self.spasettemp = d[k]
+			elif k == "poolsettemp":
+				self.poolsettemp = d[k]
 			elif int(k) > 0 and int(k) < 16:		# circuit
 				# decode json sting
 				cdict = json.loads(d[k])				

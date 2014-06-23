@@ -17,8 +17,10 @@ try:
 	if globals()['json']:
 		# build dictionary
 		d = {"airtemp" : int(httpcontroller.getairtemp()),
-			"pooltemp" : int(httpcontroller.getpooltemp()),
-			"spatemp" :  int(httpcontroller.getspatemp()) }
+			"watertemp" : int(httpcontroller.getwatertemp()),
+			"spasettemp" :  int(httpcontroller.getspasettemp()),
+			"poolsettemp" :  int(httpcontroller.getpoolsettemp()),
+			}
 		cl = httpcontroller.getcircuitlist()
 		for c in cl:
 			d["circuit%s" % (c.getNumber())] = c.todict()
@@ -26,16 +28,12 @@ try:
 		print jsonmod.dumps(d)
 
 except:		# json not defined, give a text/html response
-	print '''<html>
-<head>
-<title>Pool Controller</title>
-</head>
-<body>
-'''
+	print '<html> <head> <title>Pool Controller</title> </head> <body>'
 	print '<form name="input" method="post" action="change.py">'
-	print "<span>Air temp is %d</span></br>" % ( int(httpcontroller.getairtemp()))
-	print '<span>Pool Temperature: <input type="text" name="pooltemp" value="%s"></span></br>' % (httpcontroller.getpooltemp())
-	print '<span>Spa Temperature: <input type="text" name="spatemp" value="%s"></span></br>' % (httpcontroller.getspatemp())
+	print '<span>Air temp is %d</span></br>' % ( int(httpcontroller.getairtemp()))
+	print '<span>Water temp is %d</span></br>' % ( int(httpcontroller.getwatertemp()))
+	print '<span>Pool Set Temperature: <input type="text" name="pooltemp" value="%s"></span></br>' % (httpcontroller.getpoolsettemp())
+	print '<span>Spa Set Temperature: <input type="text" name="spatemp" value="%s"></span></br>' % (httpcontroller.getspasettemp())
 
 	cl = httpcontroller.getcircuitlist()
 	for c in cl:
@@ -45,17 +43,10 @@ except:		# json not defined, give a text/html response
 			val = ""
 		print( '<span><input type="checkbox" name="circuit%s" value="1" %s>%s</span></br>' % ( c.getNumber(), val, c.getName().capitalize() ))
 
-	print '''
-<input type="submit" value="Submit">
-</form>
-<hr>
-'''
-	print( "<p>Air temp is %d</p>" % ( int(httpcontroller.getairtemp())))
-	print( "<p>Pool temp is %d</p>" % ( int(httpcontroller.getpooltemp())))
-	print( "<p>Spa temp is %d</p>" % ( int(httpcontroller.getspatemp())))
+	print '<input type="submit" value="Submit"> </form> <hr>'
+	print '<p>Air temp is %d</p>' % ( int(httpcontroller.getairtemp()))
+	print '<p>Water temp is %d</p>' % ( int(httpcontroller.getwatertemp()))
 	state = ['OFF', 'ON']
 	for c in cl:
-		print("%s circuit %s is %s</br>" % (c.getName(), c.getNumber(), state[int(c.getState())]))
-	print '''
-</body></html>
-'''
+		print "%s circuit %s is %s</br>" % (c.getName(), c.getNumber(), state[int(c.getState())])
+	print '</body></html>'
