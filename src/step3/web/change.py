@@ -27,10 +27,10 @@ else:
 		params = jsonmod.loads(query_string)
 		updatecontroller = controller.controller([])
 		for i in params.keys():
-			if i == "spatemp":
-				updatecontroller.setspatemp( params[i] )
-			elif i == "pooltemp":
-				updatecontroller.setpooltemp( params[i] )
+			if i == "spasettemp":
+				updatecontroller.setspasettemp( params[i] )
+			elif i == "poolsettemp":
+				updatecontroller.setpoolsettemp( params[i] )
 			elif i == "airtemp":
 				updatecontroller.setairtemp( params[i] )
 			elif i[:7] == "circuit":	# build circuit
@@ -73,10 +73,10 @@ else:
 		updatecontroller = controller.controller([])
 
 		for i in params.keys():
-			if i == "spatemp":
-				updatecontroller.setspatemp( params[i] )
-			elif i == "pooltemp":
-				updatecontroller.setpooltemp( params[i] )
+			if i == "spasettemp":
+				updatecontroller.setspasettemp( params[i] )
+			elif i == "poolsettemp":
+				updatecontroller.setpoolsettemp( params[i] )
 			elif i == "airtemp":
 				updatecontroller.setairtemp( params[i] )
 			elif i[:7] == "circuit":	# build circuit

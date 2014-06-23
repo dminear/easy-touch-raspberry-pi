@@ -123,7 +123,11 @@ class controller(object):
 				self.spasettemp = d[k]
 			elif k == "poolsettemp":
 				self.poolsettemp = d[k]
-			elif int(k) > 0 and int(k) < 16:		# circuit
+			elif k == "0" or k == "1" or k == "2" or k == "3" or \
+				k == "4" or k == "5" or k == "6" or k == "7" or \
+				k == "8" or k == "9" or k == "10" or k == "11" or \
+				k == "12" or k == "13" or k == "14" or k == "15" or \
+				k == "16" or k == "17" or k == "18":	# circuit
 				# decode json sting
 				cdict = json.loads(d[k])				
 				self.circuitlist.append( circuit.circuit(k,
@@ -132,7 +136,7 @@ class controller(object):
 								cdict["bit"],
 								cdict["value"] ))
 			else:
-				print "bad key %s found in load" % k
+				#print "bad key %s found in load" % k
+				a = 1				
 		self.oldhash = self.hash
 
-		

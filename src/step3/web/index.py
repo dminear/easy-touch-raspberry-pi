@@ -32,8 +32,8 @@ except:		# json not defined, give a text/html response
 	print '<form name="input" method="post" action="change.py">'
 	print '<span>Air temp is %d</span></br>' % ( int(httpcontroller.getairtemp()))
 	print '<span>Water temp is %d</span></br>' % ( int(httpcontroller.getwatertemp()))
-	print '<span>Pool Set Temperature: <input type="text" name="pooltemp" value="%s"></span></br>' % (httpcontroller.getpoolsettemp())
-	print '<span>Spa Set Temperature: <input type="text" name="spatemp" value="%s"></span></br>' % (httpcontroller.getspasettemp())
+	print '<span>Pool Set Temperature: <input type="text" name="poolsettemp" value="%s"></span></br>' % (httpcontroller.getpoolsettemp())
+	print '<span>Spa Set Temperature: <input type="text" name="spasettemp" value="%s"></span></br>' % (httpcontroller.getspasettemp())
 
 	cl = httpcontroller.getcircuitlist()
 	for c in cl:
