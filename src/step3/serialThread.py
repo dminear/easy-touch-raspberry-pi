@@ -208,6 +208,7 @@ class serialThread (threading.Thread):
 			print "ERR: message not match length size"
 
 		if (dest == 0x0f or dest == 0x20) or src == 0x20:
+			print
 			for y in range(length+9+2):
 				sys.stdout.write( "%02x " % message[y] )
 			print
