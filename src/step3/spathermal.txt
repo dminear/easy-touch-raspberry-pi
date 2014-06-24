@@ -37,8 +37,12 @@ ff 00 ff a5 07 0f 10 02 1d 13 16 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00
   Equipment 0 :  00100000
   Equipment 1 :  00000000
 
+# do not know what this is, but looks like a request for info
+
 ff 00 ff a5 07 10 20 c5 01 00 01 a2 
  dest 10, src 20, cmd c5, len 01, chksum 01 a2
+
+# and here's the info from the controller src 0x10
 
 ff 00 ff a5 07 0f 10 05 08 13 16 02 17 06 0e 00 00 01 2e 
  dest 0f, src 10, cmd 05, len 08, chksum 01 2e
@@ -109,6 +113,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 16 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00
   Equipment 0 :  00100000
   Equipment 1 :  00000000
 
+# spa circuit on
+
 ff 00 ff a5 07 10 20 86 02 01 01 01 66 
  dest 10, src 20, cmd 86, len 02, chksum 01 66
 
@@ -126,6 +132,7 @@ ff 00 ff a5 07 0f 10 02 1d 13 16 21 00 00 00 00 00 00 20 0c 00 00 04 4e 4e 00 00
   Wallclock 19:22, Pool Time 19:22
   Equipment 0 :  00100001
   Equipment 1 :  00000000
+
 spa on
 
 ff 00 ff a5 07 0f 10 02 1d 13 16 21 00 00 00 00 00 00 20 0c 00 00 04 4e 4e 00 00 47 00 00 00 05 00 00 78 4c 00 0d 03 1d 
@@ -172,7 +179,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 17 21 00 00 00 00 00 00 20 0c 00 00 04 4f 4f 00 00
   Wallclock 19:22, Pool Time 19:23
   Equipment 0 :  00100001
   Equipment 1 :  00000000
-heater set to 98
+
+heater set to 98 = 0x62
 
 ff 00 ff a5 07 0f 10 02 1d 13 17 21 00 00 00 00 00 00 20 0c 00 00 04 4f 4f 00 00 47 00 00 00 05 00 00 78 4c 00 0d 03 20 
  dest 0f, src 10, cmd 02, len 1d, chksum 03 20
@@ -240,6 +248,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 17 21 00 00 00 00 00 00 20 0c 00 00 04 4e 4e 00 00
   Wallclock 19:23, Pool Time 19:23
   Equipment 0 :  00100001
   Equipment 1 :  00000000
+
+# remote sends spa circuit off
 
 ff 00 ff a5 07 10 20 86 02 01 00 01 65 
  dest 10, src 20, cmd 86, len 02, chksum 01 65
@@ -271,6 +281,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 17 20 00 00 00 00 00 00 20 00 00 00 04 4e 4e 00 00
   Equipment 0 :  00100000
   Equipment 1 :  00000000
 
+# remote sends spa circuit on
+
 ff 00 ff a5 07 10 20 86 02 01 01 01 66 
  dest 10, src 20, cmd 86, len 02, chksum 01 66
 
@@ -294,7 +306,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 17 21 00 00 00 00 00 00 20 0c 00 00 04 4e 4e 00 00
   Wallclock 19:23, Pool Time 19:23
   Equipment 0 :  00100001
   Equipment 1 :  00000000
-spa back on
+
+# spa back on
 
 ff 00 ff a5 07 0f 10 02 1d 13 17 21 00 00 00 00 00 00 20 0c 00 00 04 4e 4e 00 00 47 00 00 00 05 00 00 78 4c 00 0d 03 1e 
  dest 0f, src 10, cmd 02, len 1d, chksum 03 1e
@@ -380,6 +393,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 17 21 00 00 00 00 00 00 20 0c 00 00 04 50 50 00 00
   Wallclock 19:23, Pool Time 19:23
   Equipment 0 :  00100001
   Equipment 1 :  00000000
+
+# set temp command
 
 ff 00 ff a5 07 10 20 88 04 2b 60 05 00 01 f8 
  dest 10, src 20, cmd 88, len 04, chksum 01 f8
@@ -451,6 +466,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 18 21 00 00 00 00 00 00 20 0c 00 00 04 50 50 00 00
   Wallclock 19:24, Pool Time 19:24
   Equipment 0 :  00100001
   Equipment 1 :  00000000
+
+# set spa temp to 95 = 0x5f
 
 ff 00 ff a5 07 10 20 88 04 2b 5f 05 00 01 f7 
  dest 10, src 20, cmd 88, len 04, chksum 01 f7
@@ -560,6 +577,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 18 21 00 00 00 00 00 00 20 0c 00 00 04 50 50 00 00
   Wallclock 19:24, Pool Time 19:24
   Equipment 0 :  00100001
   Equipment 1 :  00000000
+
+# remote send set spa temp to 90=0x5A
 
 ff 00 ff a5 07 10 20 88 04 2b 5a 05 00 01 f2 
  dest 10, src 20, cmd 88, len 04, chksum 01 f2
@@ -791,6 +810,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 19 21 00 00 00 00 00 00 20 0c 00 00 04 50 50 00 00
   Equipment 0 :  00100001
   Equipment 1 :  00000000
 
+# c5 command, do not know
+
 ff 00 ff a5 07 10 20 c5 01 00 01 a2 
  dest 10, src 20, cmd c5, len 01, chksum 01 a2
 
@@ -843,6 +864,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 1a 21 00 00 00 00 00 00 20 0c 00 00 04 51 51 00 00
   Wallclock 19:25, Pool Time 19:26
   Equipment 0 :  00100001
   Equipment 1 :  00000000
+
+# remote send set spa temp to 88 = ox58
 
 ff 00 ff a5 07 10 20 88 04 2b 58 05 00 01 f0 
  dest 10, src 20, cmd 88, len 04, chksum 01 f0
@@ -911,6 +934,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 1a 21 00 00 00 00 00 00 20 0c 00 00 04 51 51 00 00
   Wallclock 19:26, Pool Time 19:26
   Equipment 0 :  00100001
   Equipment 1 :  00000000
+
+# remote send set spa temp to 96 = 0x60
 
 ff 00 ff a5 07 10 20 88 04 2b 60 05 00 01 f8 
  dest 10, src 20, cmd 88, len 04, chksum 01 f8
@@ -997,6 +1022,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 1a 21 00 00 00 00 00 00 20 0c 00 00 04 51 51 00 00
   Wallclock 19:26, Pool Time 19:26
   Equipment 0 :  00100001
   Equipment 1 :  00000000
+
+# remote sends set temp, 2b is pool temp, 62 is spa temp of 98 deg F
 
 ff 00 ff a5 07 10 20 88 04 2b 62 05 00 01 fa 
  dest 10, src 20, cmd 88, len 04, chksum 01 fa
