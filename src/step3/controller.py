@@ -9,8 +9,8 @@ class controller(object):
 	def __init__( self, circuitlist ):
 		self.circuitlist = circuitlist
 		self.watertemp = 70		# deg F
-		self.spasettemp = 70		# deg F
-		self.poolsettemp = 70		# deg F
+		self.spasettemp = 96		# deg F
+		self.poolsettemp = 45		# deg F
 		self.airtemp = 70		# deg F
 		self.hash = 0			# for caching
 		self.oldhash = 1
