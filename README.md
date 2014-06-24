@@ -151,3 +151,12 @@ sending a message to the serial thread, which builds a packet and sends
 it out the RS-485 port. Cool! I need to figure out the temperature settings
 now and see how to change the temperature -- mainly for the spa!
 
+2014-06-23
+
+Implemented pool and spa temperature setpoint on web and JSON GET and
+PUTs. It might take a minute to get a broadcast temperature setpoint
+message, so I need to clean up how that works later. If you start the
+program up and then immediately set a setpoint, then you could end up
+with some undesired default value. What you set the temps to in the
+status page is what you get.
+

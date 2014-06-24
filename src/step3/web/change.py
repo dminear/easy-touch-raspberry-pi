@@ -95,12 +95,16 @@ else:
 	# Need to take updatecontroller
 	# and bounce against a real controller and find the deltas to
 	# send as commands.
+
+	# check setpoints for differences
+	if httpcontroller.getpoolsettemp() != updatecontroller.getpoolsettemp():
+		httpr.publish("poolcmd", "SET POOLTEMP %s" % (updatecontroller.getpoolsettemp()))
+		
+	if httpcontroller.getspasettemp() != updatecontroller.getspasettemp():
+		httpr.publish("poolcmd", "SET SPATEMP %s" % (updatecontroller.getspasettemp()))
+		
 	
-	# TODO: don't know how to handle temps yet -- we know the current
-	# temp, but do not know the current setpoint. So we can't send
-	# a temp update (for now we will ignore the temperature)
-
-
+	# check circuits for differences
 	for c in httpcontroller.getcircuitlist():
 		if c.getState() != updatecontroller.getcircuitnumstate(c.getNumber()):
 			# we got a difference

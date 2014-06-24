@@ -136,7 +136,20 @@ class serialThread (threading.Thread):
 
 	def processCommand( self, cmd ):
 		# command is of the form:  SET CIRCUIT 1 0
-		action, object, num, val = cmd.split()
+		print
+		print "Serial command is ", cmd
+		print
+		action = 'DUMMY'
+		object = 'NONE'
+		num = '0'
+		val = '0'
+		try:
+			action, object, num, val = cmd.split()
+		except ValueError:
+			try:
+				action, object, num = cmd.split()
+			except ValueError:
+				print "bad split from command"
 
 		if action == "SET":		# continue
 			if object == "CIRCUIT":		# do circuit functions
@@ -156,30 +169,49 @@ class serialThread (threading.Thread):
 					args = [ cmdchannel, nval ]
 
 					output = header + command + length + args
-					# compute checksum
-					chksum = 0
-					for i in range(4,len(output)):
-						chksum += output[i]
-					chkhi = int(chksum / 256)
-					chklo = int(chksum % 256)
 
-					output += [chkhi, chklo, 0xff, 0xff]
-				
-					print "-----------------output packet-------------"
-					for i in output:
-						sys.stdout.write( "%02x " % i )
-					print
-					print	
-					# now make string and write it out
-					packet = array.array('B', output).tostring()
-					print "length of packet is %d" % len(packet)
-					
-					self.ser.write(packet)
-					time.sleep(0.3)
-					self.ser.write(packet)
-					time.sleep(0.3)
-					
+					self.sendPacket( output )
+
+			if object == "POOLTEMP" or object == "SPATEMP":
+				if int(num) >= 35 and int(num) <= 104:
+					if object == "POOLTEMP":
+						poolt = int(num)
+						spat = int(self.controller.getspasettemp())
+					else:
+						poolt = int(self.controller.getpoolsettemp())
+						spat = int(num)
+						
+					# now form packet
+					header = [ 0xFF, 0xFF, 0x00, 0xFF, 0xA5, 0x07, 0x10, 0x20 ]
+					command = [ 0x88, 0x04, poolt, spat, 0x05, 0x00 ]
+					output = header + command
+					self.sendPacket( output )
 		return True
+
+	def sendPacket( self, output ):
+		# compute checksum
+		chksum = 0
+		for i in range(4,len(output)):
+			chksum += output[i]
+		chkhi = int(chksum / 256)
+		chklo = int(chksum % 256)
+
+		output += [chkhi, chklo, 0xff, 0xff]
+				
+		print "-----------------output packet-------------"
+		for i in output:
+			sys.stdout.write( "%02x " % i )
+		print
+		print	
+		# now make string and write it out
+		packet = array.array('B', output).tostring()
+		print "length of packet is %d" % len(packet)
+					
+		self.ser.write(packet)
+		time.sleep(0.3)
+		self.ser.write(packet)
+		time.sleep(0.3)
+
 
 	def processMessage( self, message ):
 
@@ -207,6 +239,7 @@ class serialThread (threading.Thread):
 		else:
 			print "ERR: message not match length size"
 
+		# print out messages we are interested in
 		if (dest == 0x0f or dest == 0x20) or src == 0x20:
 			print
 			for y in range(length+9+2):
@@ -216,7 +249,22 @@ class serialThread (threading.Thread):
 
 		if dest == 0x0f and src == 0x10 and cmd == 0x02 and length == 0x1d and chksum == chkhi*256+chklo:	# status
 			self.decodeStatus( message )
+		if dest == 0x0f and src == 0x10 and cmd == 0x08 and length == 0x0d and chksum == chkhi*256+chklo:	# status
+			self.decodeTemperatureStatus( message )
 	
+
+	def decodeTemperatureStatus( self, data ):
+			waterTemp=10
+			airTemp=11
+			poolsetTemp=12
+			spasetTemp=13
+
+			# update controller values
+			#print "--pool Set temp is ", data[poolsetTemp]
+			#print "--spa Set temp is ", data[spasetTemp]
+			self.controller.setpoolsettemp( data[poolsetTemp] )
+			self.controller.setspasettemp( data[spasetTemp] )
+			self.controller.save()		# to database
 
 	def decodeStatus( self, data ):
 			waterTemp=23
