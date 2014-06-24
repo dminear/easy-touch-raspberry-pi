@@ -1,0 +1,216 @@
+ff 00 ff a5 07 0f 10 02 1d 12 12 20 00 00 00 00 00 00 20 00 00 00 04 4d 4d 00 00 49 00 00 00 05 00 00 91 54 00 0d 03 2c 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 2c
+  Wallclock 18:18, Pool Time 18:18
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+
+# remote set pool temp to 2d = 45, spa is not running
+
+ff 00 ff a5 07 10 20 88 04 2d 62 05 00 01 fc 
+ dest 10, src 20, cmd 88, len 04, chksum 01 fc
+
+ff 00 ff a5 07 20 10 01 01 88 01 66 
+ dest 20, src 10, cmd 01, len 01, chksum 01 66
+
+ff 00 ff a5 07 0f 10 02 1d 12 12 20 00 00 00 00 00 00 20 00 00 00 04 4d 4d 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 0e 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 0e
+  Wallclock 18:18, Pool Time 18:18
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 12 20 00 00 00 00 00 00 20 00 00 00 04 4d 4d 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 0e 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 0e
+  Wallclock 18:18, Pool Time 18:18
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 12 20 00 00 00 00 00 00 20 00 00 00 04 4d 4d 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 0e 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 0e
+  Wallclock 18:18, Pool Time 18:18
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 12 20 00 00 00 00 00 00 20 00 00 00 04 4e 4e 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 10 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 10
+  Wallclock 18:18, Pool Time 18:18
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 12 20 00 00 00 00 00 00 20 00 00 00 04 4e 4e 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 10 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 10
+  Wallclock 18:18, Pool Time 18:18
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 12 20 00 00 00 00 00 00 20 00 00 00 04 4e 4e 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 10 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 10
+  Wallclock 18:18, Pool Time 18:18
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 12 20 00 00 00 00 00 00 20 00 00 00 04 4e 4e 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 10 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 10
+  Wallclock 18:18, Pool Time 18:18
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 12 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 12 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 12
+  Wallclock 18:18, Pool Time 18:18
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 12 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 12 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 12
+  Wallclock 18:18, Pool Time 18:18
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+
+
+ff 00 ff a5 07 0f 10 08 0d 4f 4f 49 2d 62 05 00 00 00 00 00 00 00 02 5b 
+ dest 0f, src 10, cmd 08, len 0d, chksum 02 5b
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 13 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 13
+  Wallclock 18:18, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 13 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 13
+  Wallclock 18:18, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+
+# remote send set pool temp
+
+ff 00 ff a5 07 10 20 88 04 2d 62 05 00 01 fc 
+ dest 10, src 20, cmd 88, len 04, chksum 01 fc
+
+ff 00 ff a5 07 20 10 01 01 88 01 66 
+ dest 20, src 10, cmd 01, len 01, chksum 01 66
+
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 13 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 13
+  Wallclock 18:18, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 13 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 13
+  Wallclock 18:18, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 13 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 13
+  Wallclock 18:18, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 13 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 13
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 13 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 13
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 13 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 13
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+
+
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 13 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 13
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 79 4e 00 0d 03 13 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 13
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+
+# remote sends set pool temp
+
+ff 00 ff a5 07 10 20 88 04 2c 62 05 00 01 fb 
+ dest 10, src 20, cmd 88, len 04, chksum 01 fb
+
+ff 00 ff a5 07 20 10 01 01 88 01 66 
+ dest 20, src 10, cmd 01, len 01, chksum 01 66
+
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 68 4d 00 0d 03 01 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 01
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 68 4d 00 0d 03 01 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 01
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 68 4d 00 0d 03 01 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 01
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 68 4d 00 0d 03 01 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 01
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 68 4d 00 0d 03 01 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 01
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 68 4d 00 0d 03 01 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 01
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 68 4d 00 0d 03 01 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 01
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 68 4d 00 0d 03 01 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 01
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 68 4d 00 0d 03 01 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 01
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 68 4d 00 0d 03 01 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 01
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+
+
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 68 4d 00 0d 03 01 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 01
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 68 4d 00 0d 03 01 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 01
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 68 4d 00 0d 03 01 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 01
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
+
+# remote sets pool temp to 43
+# temp set to 43 deg F = 0x2b -- hey, look, it's there
+
+ff 00 ff a5 07 10 20 88 04 2b 62 05 00 01 fa 
+ dest 10, src 20, cmd 88, len 04, chksum 01 fa
+
+ff 00 ff a5 07 20 10 01 01 88 01 66 
+ dest 20, src 10, cmd 01, len 01, chksum 01 66
+
+ff 00 ff a5 07 0f 10 02 1d 12 13 20 00 00 00 00 00 00 20 00 00 00 04 4f 4f 00 00 49 00 00 00 05 00 00 78 4c 00 0d 03 10 
+ dest 0f, src 10, cmd 02, len 1d, chksum 03 10
+  Wallclock 18:19, Pool Time 18:19
+  Equipment 0 :  00100000
+  Equipment 1 :  00000000
