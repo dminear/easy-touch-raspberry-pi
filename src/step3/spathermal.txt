@@ -133,7 +133,7 @@ ff 00 ff a5 07 0f 10 02 1d 13 16 21 00 00 00 00 00 00 20 0c 00 00 04 4e 4e 00 00
   Equipment 0 :  00100001
   Equipment 1 :  00000000
 
-spa on
+# spa on
 
 ff 00 ff a5 07 0f 10 02 1d 13 16 21 00 00 00 00 00 00 20 0c 00 00 04 4e 4e 00 00 47 00 00 00 05 00 00 78 4c 00 0d 03 1d 
  dest 0f, src 10, cmd 02, len 1d, chksum 03 1d
@@ -170,6 +170,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 16 21 00 00 00 00 00 00 20 0c 00 00 04 4f 4f 00 00
   Wallclock 19:22, Pool Time 19:22
   Equipment 0 :  00100001
   Equipment 1 :  00000000
+
+# this is a broadcast cmd 08 with the water, air, pool set temp,  and spa set temp (4f, 47, 2b, and 62)
 
 ff 00 ff a5 07 0f 10 08 0d 4f 4f 47 2b 62 05 00 00 00 00 00 00 00 02 57 
  dest 0f, src 10, cmd 08, len 0d, chksum 02 57
@@ -597,7 +599,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 18 21 00 00 00 00 00 00 20 0c 00 00 04 50 50 00 00
   Wallclock 19:24, Pool Time 19:24
   Equipment 0 :  00100001
   Equipment 1 :  00000000
-set to 90
+
+# set to 90
 
 ff 00 ff a5 07 0f 10 02 1d 13 18 21 00 00 00 00 00 00 20 0c 00 00 04 50 50 00 00 47 00 00 00 05 00 00 86 44 00 0d 03 29 
  dest 0f, src 10, cmd 02, len 1d, chksum 03 29
@@ -628,7 +631,10 @@ ff 00 ff a5 07 0f 10 02 1d 13 18 21 00 00 00 00 00 00 20 0c 00 00 04 50 50 00 00
   Wallclock 19:24, Pool Time 19:24
   Equipment 0 :  00100001
   Equipment 1 :  00000000
-water temp is 80
+
+#water temp is 80
+
+# info command 08 -- water temp is 50, air is 47, pool set temp is 2b, spa set temp is 5a
 
 ff 00 ff a5 07 0f 10 08 0d 50 50 47 2b 5a 05 00 00 00 00 00 00 00 02 51 
  dest 0f, src 10, cmd 08, len 0d, chksum 02 51
@@ -650,7 +656,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 19 21 00 00 00 00 00 00 20 0c 00 00 04 50 50 00 00
   Wallclock 19:24, Pool Time 19:25
   Equipment 0 :  00100001
   Equipment 1 :  00000000
-air is 71
+
+# air is 71
 
 ff 00 ff a5 07 0f 10 02 1d 13 19 21 00 00 00 00 00 00 20 0c 00 00 04 50 50 00 00 47 00 00 00 05 00 00 86 44 00 0d 03 2a 
  dest 0f, src 10, cmd 02, len 1d, chksum 03 2a
@@ -1072,6 +1079,8 @@ ff 00 ff a5 07 0f 10 02 1d 13 1a 21 00 00 00 00 00 00 20 0c 00 00 04 51 51 00 00
   Wallclock 19:26, Pool Time 19:26
   Equipment 0 :  00100001
   Equipment 1 :  00000000
+
+# status cmd 08 -- water/air/pool/spa of 51 47 2b 62
 
 ff 00 ff a5 07 0f 10 08 0d 51 51 47 2b 62 05 00 00 00 00 00 00 00 02 5b 
  dest 0f, src 10, cmd 08, len 0d, chksum 02 5b
