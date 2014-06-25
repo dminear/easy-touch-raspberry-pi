@@ -12,7 +12,7 @@ I have a wireless Easy-Touch system, but it got some corrosion on the remote's M
 
 I have also bought a LinkSprite RS485/GPIO Shield for Raspberry Pi which will be the interface to the Pentair Easy-Touch controller.
 
-* $40 for the Raspberry Pi
+* $40 for the [Raspberry Pi](https://www.sparkfun.com/products/11546)
 * $12 for the [LinkSprite RS-485/GPIO Shield](https://www.sparkfun.com/products/12826)
 * The book [*Getting Started with Raspberry Pi* ](http://www.amazon.com/Getting-Started-Raspberry-Pi-Make/dp/1449344216/ref=sr_1_1?ie=UTF8&qid=1401780695&sr=8-1&keywords=getting+started+with+raspberry+pi)
 
