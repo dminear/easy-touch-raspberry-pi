@@ -160,3 +160,10 @@ program up and then immediately set a setpoint, then you could end up
 with some undesired default value. What you set the temps to in the
 status page is what you get.
 
+2014-06-24
+
+Added password support in the form of a md5 hash of a token. It has to match
+in order for the change.py PUT to succeed. Modified my firehol routing to
+do port forwarding to the Raspberry Pi and now I can control the pool from
+outside the home.
+

@@ -42,7 +42,7 @@ except:		# json not defined, give a text/html response
 		else:
 			val = ""
 		print( '<span><input type="checkbox" name="circuit%s" value="1" %s>%s</span></br>' % ( c.getNumber(), val, c.getName().capitalize() ))
-
+	print '<span>Token: <input type="text" name="token"></span></br>'
 	print '<input type="submit" value="Submit"> </form> <hr>'
 	print 'Air temp is %d</br>' % ( int(httpcontroller.getairtemp()))
 	print 'Water temp is %d</br>' % ( int(httpcontroller.getwatertemp()))

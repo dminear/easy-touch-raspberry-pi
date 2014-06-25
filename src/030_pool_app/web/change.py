@@ -40,10 +40,11 @@ else:
 							params[i]['bit'],
 							params[i]['value'] )
 				updatecontroller.appendcircuit( cir );
+			elif i == "token":
+				updatecontroller.setpassword( params[i] )
 			else:
 				# nothing, ignore
 				a = 1
-		print '["all good"]'
 	else:
 		# take input and convert to object
 		if 'query_string' in globals():
@@ -82,30 +83,40 @@ else:
 			elif i[:7] == "circuit":	# build circuit
 				cir = circuit.circuit( i[7:], i, 0, 0, params[i] )
 				updatecontroller.appendcircuit( cir );
+			elif i == "token":
+				updatecontroller.setpassword( params[i] )
 			else:
 				# nothing, ignore
 				a = 1
 
-		print '''<html><head><title>Response</title></head>
-<body>
-<a href="/">Back to status</a>
-</body></html>
-'''
+	# check passwords
+	if updatecontroller.getpassword() != httpcontroller.getpassword():
+		# failed, return bad response
+		if json == 1:
+			print '["failed"]'
+		else:
+			print '<html><head><title>Failed</title></head><body><p>update failed</p><a href="/">Back to status</a></body></html>'
+	else:	# good password	
+		if json == 1:
+			print '["success"]'
+		else:
+			print '<html><head><title>Response</title></head><body><p>update success</p><a href="/">Back to status</a></body></html>'
+			
+		# Need to take updatecontroller
+		# and bounce against a real controller and find the deltas to
+		# send as commands.
 
-	# Need to take updatecontroller
-	# and bounce against a real controller and find the deltas to
-	# send as commands.
-
-	# check setpoints for differences
-	if httpcontroller.getpoolsettemp() != updatecontroller.getpoolsettemp():
-		httpr.publish("poolcmd", "SET POOLTEMP %s" % (updatecontroller.getpoolsettemp()))
+		# check setpoints for differences
+		if int(httpcontroller.getpoolsettemp()) != int(updatecontroller.getpoolsettemp()):
+			httpr.publish("poolcmd", "SET POOLTEMP %s" % (updatecontroller.getpoolsettemp()))
 		
-	if httpcontroller.getspasettemp() != updatecontroller.getspasettemp():
-		httpr.publish("poolcmd", "SET SPATEMP %s" % (updatecontroller.getspasettemp()))
+		if int(httpcontroller.getspasettemp()) != int(updatecontroller.getspasettemp()):
+			httpr.publish("poolcmd", "SET SPATEMP %s" % (updatecontroller.getspasettemp()))
 		
 	
-	# check circuits for differences
-	for c in httpcontroller.getcircuitlist():
-		if c.getState() != updatecontroller.getcircuitnumstate(c.getNumber()):
-			# we got a difference
-			httpr.publish("poolcmd", "SET CIRCUIT %s %s" % (c.getNumber(), 1-int(c.getState()) ))
+		# check circuits for differences
+		for c in httpcontroller.getcircuitlist():
+			if c.getState() != updatecontroller.getcircuitnumstate(c.getNumber()):
+				# we got a difference
+				httpr.publish("poolcmd", "SET CIRCUIT %s %s" % (c.getNumber(), 1-int(c.getState()) ))
+

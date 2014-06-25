@@ -15,6 +15,13 @@ class controller(object):
 		self.hash = 0			# for caching
 		self.oldhash = 1
 		self.r = redis.StrictRedis( host='localhost', port=6379, db=0)
+		self.password = ''
+
+	def setpassword( self, pw):
+		self.password = pw
+
+	def getpassword( self ):
+		return self.password
 
 	def setwatertemp( self, temp ):
 		if self.watertemp != temp:
@@ -106,6 +113,8 @@ class controller(object):
 			# to see all the data stored in redis
 			self.r.hmset( "pool", d )
 			self.oldhash = self.hash
+			# we are never going to save the password, only
+			# the set_password.py script will do this
 
 	def load( self ):
 		# get dictionary from redis
@@ -135,6 +144,8 @@ class controller(object):
 								cdict["byte"],
 								cdict["bit"],
 								cdict["value"] ))
+			elif k =="password":
+				self.password = d[k]
 			else:
 				#print "bad key %s found in load" % k
 				a = 1				
