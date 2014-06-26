@@ -20,7 +20,7 @@ For about $60 I would be out ahead.
 
 ### Development environment
 
-Here's a close up </img src="images/pi-close.jpg"> with the RS-485 board plugged in, and a larger picture </img src="images/pi-all.jpg"> of the local development environment on my kitchen counter.
+Here's a close up ![close-up](images/pi-close.jpg) with the RS-485 board plugged in, and a pull back ![pull-back](images/pi-all.jpg) of the local development environment on my kitchen counter.
 
 ## Work log
 
