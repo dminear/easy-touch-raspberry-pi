@@ -28,7 +28,10 @@ try:
 		print jsonmod.dumps(d)
 
 except:		# json not defined, give a text/html response
-	print '<html> <head> <title>Pool Controller</title> </head> <body>'
+	print '<html> <head> <title>Pool Controller</title> '
+	print '<link rel="stylesheet" type="text/css" href="static/style.css">'
+	print '<script src="js/jquery.js"></script>'
+	print '</head> <body>'
 	print '<form name="input" method="post" action="change.py">'
 	print '<span>Air temp is %d</span></br>' % ( int(httpcontroller.getairtemp()))
 	print '<span>Water temp is %d</span></br>' % ( int(httpcontroller.getwatertemp()))
