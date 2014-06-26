@@ -88,6 +88,9 @@ class httpServHandler( BaseHTTPServer.BaseHTTPRequestHandler):
 		else:
 			parms = ''
 
+		self.query_string = self.rfile.read(int(self.headers['Content-Length']))
+		self.args = dict(cgi.parse_qsl(self.query_string))
+
 		urlparms = dict(cgi.parse_qsl(parms))
 
 		try:
@@ -97,8 +100,6 @@ class httpServHandler( BaseHTTPServer.BaseHTTPRequestHandler):
 		except:
 			jsonrequest = False
 
-		self.query_string = self.rfile.read(int(self.headers['Content-Length']))
-		self.args = dict(cgi.parse_qsl(self.query_string))
 		# add key for benefit of called script
 		self.args["method"] = "POST"
 
