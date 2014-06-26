@@ -15,6 +15,7 @@ import os
 import Queue
 import redis
 import array
+import logging
 
 cmdLock = threading.Lock()
 cmdQueue = Queue.Queue(10)
@@ -41,6 +42,7 @@ class cmdThread (threading.Thread):
 		self.ps = self.r.pubsub()
 		self.ps.subscribe(['poolcmd'])
 		threading.Thread.__init__(self)
+		
 
 	def stop(self):
 		self.exit = True
@@ -65,12 +67,13 @@ class serialThread (threading.Thread):
 		self.p2 = p2
 		self.exit = False
 		threading.Thread.__init__(self)
+		logging.basicConfig( filename="serial.log", level=logging.DEBUG )
 
 	def stop(self):
 		self.exit = True
 
 	def run(self):
-		print "Starting serial thread"
+		logging.info( "Starting serial thread" )
 		self.ser = serial.Serial(self.device, baudrate=9600, timeout=1)
 		scanlen = 100
 		inputBuffer = []
@@ -136,9 +139,7 @@ class serialThread (threading.Thread):
 
 	def processCommand( self, cmd ):
 		# command is of the form:  SET CIRCUIT 1 0
-		print
-		print "Serial command is ", cmd
-		print
+		logging.debug("Serial command is %s " % cmd)
 		action = 'DUMMY'
 		object = 'NONE'
 		num = '0'
@@ -149,7 +150,7 @@ class serialThread (threading.Thread):
 			try:
 				action, object, num = cmd.split()
 			except ValueError:
-				print "bad split from command"
+				logging.debug("bad split from command")
 
 		if action == "SET":		# continue
 			if object == "CIRCUIT":		# do circuit functions
@@ -198,14 +199,14 @@ class serialThread (threading.Thread):
 
 		output += [chkhi, chklo, 0xff, 0xff]
 				
-		print "-----------------output packet-------------"
+		logging.debug("-----------------output packet-------------")
+		p = ''
 		for i in output:
-			sys.stdout.write( "%02x " % i )
-		print
-		print	
+			p +=  "%02x " % i 
+		logging.debug( p )
 		# now make string and write it out
 		packet = array.array('B', output).tostring()
-		print "length of packet is %d" % len(packet)
+		logging.debug("length of packet is %d" % len(packet))
 					
 		self.ser.write(packet)
 		time.sleep(0.3)
@@ -216,10 +217,11 @@ class serialThread (threading.Thread):
 	def processMessage( self, message ):
 
 		if len(message) < 11:
-			print "ERR: Message short:"
+			logging.debug( "ERR: Message short:" )
+			h = ''
 			for y in message:
-				sys.stdout.write( "%02x " % y )
-			print
+				h +=  "%02x " % y 
+			logging.debug( h )
 			return
 				
 		dest = message[5]
@@ -237,15 +239,16 @@ class serialThread (threading.Thread):
 			chkhi = message[length+9]
 			chklo = message[length+10]
 		else:
-			print "ERR: message not match length size"
+			logging.debug( "ERR: message not match length size" )
 
 		# print out messages we are interested in
 		if (dest == 0x0f or dest == 0x20) or src == 0x20:
-			print
+			f = ''
 			for y in range(length+9+2):
-				sys.stdout.write( "%02x " % message[y] )
-			print
-			print " dest %02x, src %02x, cmd %02x, len %02x, chksum %02x %02x" % (dest, src, cmd, length, chksum / 0x100, chksum % 0x100)
+				f +=  "%02x " % message[y] 
+			logging.debug( f )	
+			logging.debug( " dest %02x, src %02x, cmd %02x, len %02x, chksum %02x %02x" % (dest, src, cmd, length, chksum / 0x100, chksum % 0x100) )
+
 
 		if dest == 0x0f and src == 0x10 and cmd == 0x02 and length == 0x1d and chksum == chkhi*256+chklo:	# status
 			self.decodeStatus( message )
@@ -275,13 +278,13 @@ class serialThread (threading.Thread):
 
 			t=time.localtime()
 			localtime = time.strftime("%H:%M",t)
-			print "  Wallclock %s, Pool Time %02d:%02d" % (localtime, data[clockHours], data[clockMinutes])
+			logging.debug( "  Wallclock %s, Pool Time %02d:%02d" % (localtime, data[clockHours], data[clockMinutes]))
 			#print "  Air %s, Water %s" % (data[airTemp], data[waterTemp])
 			#print "  Heater Temperature: ",data[heaterTemp]
 
 			equip = [ "{0:08b}".format(data[11]), "{0:08b}".format(data[12]) ]
 			for i in range(len(equip)):
-				print "  Equipment", i, ": ", equip[i]
+				logging.debug( "  Equipment%d : %s" % (i,equip[i]))
 
 			# update controller values
 			self.controller.setwatertemp( data[waterTemp] )

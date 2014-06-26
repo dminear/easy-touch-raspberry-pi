@@ -6,6 +6,7 @@ import time
 import sys
 import circuit
 import controller
+import logging
 
 # set up circuits
 # I just guessed at circuit number; it is really a label tied to byte/bit
@@ -32,6 +33,11 @@ for k in circuits.keys():
 						0
 						))
 
+
+# switch to DEBUG for packet level byte data (but then that writes to the SD
+# card so do not keep it there in normal operation
+
+logging.basicConfig( filename='main.log', level=logging.INFO)
 
 # pass the circuits to the serial thread for decoding and stuffing
 # in the redis database
