@@ -54,6 +54,8 @@ cmdT.start()
 bExit = False
 print "Type CTRL-z to background, then kill the job to exit. This is usually 'kill %1'"
 
+line = ''
+
 while not bExit:
 	try: 
 		line = sys.stdin.readline().strip()
