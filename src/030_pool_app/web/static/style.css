@@ -1,8 +1,14 @@
 body {	background-color: #EEE;
-	font: sans-serif;
+	font-family: sans-serif;
 }
 
 form {	border-style: solid;
 	border-width: 1px;
+	margin: 2em;
+	padding: 1em;
 }
+
+#slider {	margin: 10px;
+		width: 50%;
+ }
 

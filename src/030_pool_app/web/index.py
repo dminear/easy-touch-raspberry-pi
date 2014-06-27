@@ -30,13 +30,19 @@ try:
 except:		# json not defined, give a text/html response
 	print '<html> <head> <title>Pool Controller</title> '
 	print '<link rel="stylesheet" type="text/css" href="static/style.css">'
+	print '<link rel="stylesheet" href="js/jquery-ui.css">'
 	print '<script src="js/jquery.js"></script>'
+	print '<script src="js/jquery-ui.js"></script>'
 	print '</head> <body>'
+
 	print '<form name="input" method="post" action="change.py">'
-	print '<span>Air temp is %d</span></br>' % ( int(httpcontroller.getairtemp()))
-	print '<span>Water temp is %d</span></br>' % ( int(httpcontroller.getwatertemp()))
-	print '<span>Pool Set Temperature: <input type="text" name="poolsettemp" value="%s"></span></br>' % (httpcontroller.getpoolsettemp())
-	print '<span>Spa Set Temperature: <input type="text" name="spasettemp" value="%s"></span></br>' % (httpcontroller.getspasettemp())
+
+	print '<div id="slider"></div>'
+
+	print '<span>Air temperature is %d &deg;F</span></br>' % ( int(httpcontroller.getairtemp()))
+	print '<span>Water temperature is %d &deg;F</span></br>' % ( int(httpcontroller.getwatertemp()))
+	print '<span>Pool Set Temperature: <input type="text" size="4" name="poolsettemp" value="%s">&deg;F</span></br>' % (httpcontroller.getpoolsettemp())
+	print '<span>Spa Set Temperature: <input type="text" size="4" name="spasettemp" value="%s">&deg;F</span></br>' % (httpcontroller.getspasettemp())
 
 	cl = httpcontroller.getcircuitlist()
 	for c in cl:
@@ -45,11 +51,17 @@ except:		# json not defined, give a text/html response
 		else:
 			val = ""
 		print( '<span><input type="checkbox" name="circuit%s" value="1" %s>%s</span></br>' % ( c.getNumber(), val, c.getName().capitalize() ))
-	print '<span>Token: <input type="text" name="token"></span></br>'
-	print '<input type="submit" value="Submit"> </form> <hr>'
+	print '<span>Token: <input type="text" size="32" name="token"></span></br>'
+	print '<input type="submit" value="Submit"> </form>'
+
+	print '<script> $( "#slider" ).slider(); </script>'
+
+	'''
+	print ' <hr>'
 	print 'Air temp is %d</br>' % ( int(httpcontroller.getairtemp()))
 	print 'Water temp is %d</br>' % ( int(httpcontroller.getwatertemp()))
 	state = ['OFF', 'ON']
 	for c in cl:
 		print "%s circuit %s is %s</br>" % (c.getName(), c.getNumber(), state[int(c.getState())])
+'''
 	print '</body></html>'

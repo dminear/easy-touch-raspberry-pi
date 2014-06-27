@@ -12,7 +12,9 @@ servAddr = ('', 8000)
 mimedict = { 	"js" : "application/javascript",
 		"txt" : "text/plain",
 		"html" : "text/html",
-		"css" : "text/css"
+		"css" : "text/css",
+		"png" : "image/png",
+		"gif" : "image/gif"
 	}
 
 
