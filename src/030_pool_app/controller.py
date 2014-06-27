@@ -4,6 +4,11 @@
 import circuit
 import redis
 import json
+from python_example import StatsdClient
+
+gSendStats = False
+statsServer = "192.168.1.2"
+statsPort = 8125
 
 class controller(object):
 	def __init__( self, circuitlist ):
@@ -16,6 +21,10 @@ class controller(object):
 		self.oldhash = 1
 		self.r = redis.StrictRedis( host='localhost', port=6379, db=0)
 		self.password = ''
+		if gSendStats == True:
+			self.statsclient = StatsdClient( statsServer, statsPort )
+		else:
+			self.statsclient = None
 
 	def setpassword( self, pw):
 		self.password = pw
@@ -25,6 +34,8 @@ class controller(object):
 
 	def setwatertemp( self, temp ):
 		if self.watertemp != temp:
+			if gSendStats == True:
+				self.statsclient.gauge( "pool.watertemp", temp )
 			self.watertemp = temp
 			self.updatehash()
 
@@ -40,6 +51,8 @@ class controller(object):
 
 	def setairtemp( self, temp ):
 		if self.airtemp != temp:
+			if gSendStats == True:
+				self.statsclient.gauge( "pool.airtemp", temp )
 			self.airtemp = temp
 			self.updatehash()
 
