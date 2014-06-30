@@ -30,14 +30,14 @@ try:
 except:		# json not defined, give a text/html response
 	print '<html> <head> <title>Pool Controller</title> '
 	print '<link rel="stylesheet" type="text/css" href="static/style.css">'
-	print '<link rel="stylesheet" href="js/jquery-ui.css">'
-	print '<script src="js/jquery.js"></script>'
-	print '<script src="js/jquery-ui.js"></script>'
+	#print '<link rel="stylesheet" href="js/jquery-ui.css">'
+	#print '<script src="js/jquery.js"></script>'
+	#print '<script src="js/jquery-ui.js"></script>'
 	print '</head> <body>'
 
 	print '<form name="input" method="post" action="change.py">'
 
-	print '<div id="slider"></div>'
+	#print '<div id="slider"></div>'
 
 	print '<span>Air temperature is %d &deg;F</span></br>' % ( int(httpcontroller.getairtemp()))
 	print '<span>Water temperature is %d &deg;F</span></br>' % ( int(httpcontroller.getwatertemp()))
@@ -54,7 +54,7 @@ except:		# json not defined, give a text/html response
 	print '<span>Token: <input type="text" size="32" name="token"></span></br>'
 	print '<input type="submit" value="Submit"> </form>'
 
-	print '<script> $( "#slider" ).slider(); </script>'
+	#print '<script> $( "#slider" ).slider(); </script>'
 
 	'''
 	print ' <hr>'
