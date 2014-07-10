@@ -16,9 +16,16 @@ import Queue
 import redis
 import array
 import logging
+from python_example import StatsdClient
 
 cmdLock = threading.Lock()
 cmdQueue = Queue.Queue(10)
+
+
+gSendStats = True
+statsServer = "192.168.1.2"
+statsPort = 8125
+
 
 # this is a mapping from channel number to remote channel code that goes out
 # on bus. This corresponds to the stickers on the remote
@@ -42,7 +49,6 @@ class cmdThread (threading.Thread):
 		self.ps = self.r.pubsub()
 		self.ps.subscribe(['poolcmd'])
 		threading.Thread.__init__(self)
-		
 
 	def stop(self):
 		self.exit = True
@@ -68,6 +74,10 @@ class serialThread (threading.Thread):
 		self.exit = False
 		threading.Thread.__init__(self)
 		logging.basicConfig( filename="serial.log", level=logging.DEBUG )
+		if gSendStats == True:
+                        self.statsclient = StatsdClient( statsServer, statsPort )
+                else:
+                        self.statsclient = None
 
 	def stop(self):
 		self.exit = True
@@ -75,7 +85,7 @@ class serialThread (threading.Thread):
 	def run(self):
 		logging.info( "Starting serial thread" )
 		self.ser = serial.Serial(self.device, baudrate=9600, timeout=1)
-		scanlen = 100
+		scanlen = 50
 		inputBuffer = []
 		while self.exit == False:
 			
@@ -144,11 +154,12 @@ class serialThread (threading.Thread):
 		object = 'NONE'
 		num = '0'
 		val = '0'
+		
 		try:
-			action, object, num, val = cmd.split()
+			action, object, num, val, elapsedtime = cmd.split()
 		except ValueError:
 			try:
-				action, object, num = cmd.split()
+				action, object, num, elapsedtime = cmd.split()
 			except ValueError:
 				logging.debug("bad split from command")
 
@@ -172,6 +183,8 @@ class serialThread (threading.Thread):
 					output = header + command + length + args
 
 					self.sendPacket( output )
+					self.controller.setResponseStart(float(elapsedtime))
+					self.controller.setResponseFlag(True)
 
 			if object == "POOLTEMP" or object == "SPATEMP":
 				if int(num) >= 35 and int(num) <= 104:
@@ -187,6 +200,8 @@ class serialThread (threading.Thread):
 					command = [ 0x88, 0x04, poolt, spat, 0x05, 0x00 ]
 					output = header + command
 					self.sendPacket( output )
+					self.controller.setResponseStart(float(elapsedtime))
+					self.controller.setResponseFlag(True)
 		return True
 
 	def sendPacket( self, output ):
@@ -222,6 +237,8 @@ class serialThread (threading.Thread):
 			for y in message:
 				h +=  "%02x " % y 
 			logging.debug( h )
+			if gSendStats == True:
+                                self.statsclient.count( "pool.shortmsg", 1 )
 			return
 				
 		dest = message[5]
@@ -235,11 +252,15 @@ class serialThread (threading.Thread):
 		if len(message) >= length + 9 + 2:	# good
 			#compute checksum
 			for x in range( 3, 8 + length + 1):	# 8 bytes + len + 1 for range func
+				
 				chksum += message[x];
 			chkhi = message[length+9]
 			chklo = message[length+10]
 		else:
 			logging.debug( "ERR: message not match length size" )
+			if gSendStats == True:
+                                self.statsclient.count( "pool.lengthnotmatchmsg", 1 )
+			return
 
 		# print out messages we are interested in
 		if (dest == 0x0f or dest == 0x20) or src == 0x20:
@@ -251,11 +272,18 @@ class serialThread (threading.Thread):
 
 
 		if dest == 0x0f and src == 0x10 and cmd == 0x02 and length == 0x1d and chksum == chkhi*256+chklo:	# status
+			if gSendStats == True:
+                                self.statsclient.count( "pool.statusmsg", 1 )
 			self.decodeStatus( message )
-		if dest == 0x0f and src == 0x10 and cmd == 0x08 and length == 0x0d and chksum == chkhi*256+chklo:	# status
+		elif dest == 0x0f and src == 0x10 and cmd == 0x08 and length == 0x0d and chksum == chkhi*256+chklo:	# status
+			if gSendStats == True:
+                                self.statsclient.count( "pool.temperaturemsg", 1 )
 			self.decodeTemperatureStatus( message )
+		else:
+			if gSendStats == True:
+                                self.statsclient.count( "pool.othermsg", 1 )
+			
 	
-
 	def decodeTemperatureStatus( self, data ):
 			waterTemp=10
 			airTemp=11

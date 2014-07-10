@@ -4,9 +4,10 @@
 import circuit
 import redis
 import json
+import time
 from python_example import StatsdClient
 
-gSendStats = False
+gSendStats = True
 statsServer = "192.168.1.2"
 statsPort = 8125
 
@@ -19,12 +20,20 @@ class controller(object):
 		self.airtemp = 70		# deg F
 		self.hash = 0			# for caching
 		self.oldhash = 1
+		self.responsestart = 0
+		self.responseflag = False
 		self.r = redis.StrictRedis( host='localhost', port=6379, db=0)
 		self.password = ''
 		if gSendStats == True:
 			self.statsclient = StatsdClient( statsServer, statsPort )
 		else:
 			self.statsclient = None
+
+	def setResponseStart( self, t ):
+		self.responsestart = t
+
+	def setResponseFlag( self, f):
+		self.responseflag = f
 
 	def setpassword( self, pw):
 		self.password = pw
@@ -109,6 +118,11 @@ class controller(object):
 
 	# save to redis as a hash with values
 	def save( self ):
+		if self.responseflag == True:
+			t = (time.time() - self.responsestart) * 1000   # for ms
+			self.responseflag = False
+			if gSendStats == True:
+				self.statsclient.timing( "pool.cmdresponse", t )
 		# only save if we have to
 		if self.oldhash == self.hash:
 			return False

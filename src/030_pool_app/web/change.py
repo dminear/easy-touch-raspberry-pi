@@ -6,6 +6,7 @@ import cgi
 import sys
 import json as jsonmod
 import circuit
+import time
 
 httpcontroller = controller.controller( [] )
 httpcontroller.load()		# from redis
@@ -108,15 +109,15 @@ else:
 
 		# check setpoints for differences
 		if int(httpcontroller.getpoolsettemp()) != int(updatecontroller.getpoolsettemp()):
-			httpr.publish("poolcmd", "SET POOLTEMP %s" % (updatecontroller.getpoolsettemp()))
+			httpr.publish("poolcmd", "SET POOLTEMP %s %f" % (updatecontroller.getpoolsettemp(), time.time() ))
 		
 		if int(httpcontroller.getspasettemp()) != int(updatecontroller.getspasettemp()):
-			httpr.publish("poolcmd", "SET SPATEMP %s" % (updatecontroller.getspasettemp()))
+			httpr.publish("poolcmd", "SET SPATEMP %s %f" % (updatecontroller.getspasettemp(), time.time() ))
 		
 	
 		# check circuits for differences
 		for c in httpcontroller.getcircuitlist():
 			if c.getState() != updatecontroller.getcircuitnumstate(c.getNumber()):
 				# we got a difference
-				httpr.publish("poolcmd", "SET CIRCUIT %s %s" % (c.getNumber(), 1-int(c.getState()) ))
+				httpr.publish("poolcmd", "SET CIRCUIT %s %s %f" % (c.getNumber(), 1-int(c.getState()), time.time() ) )
 
