@@ -20,3 +20,8 @@ check_hash.py is a script that will dump the contents of the redis hash. You can
     ./check_hash.py
 
 and look for the line below *password*. That is the hashed token to use in the form or JSON POST.
+
+## Example JSON post message
+
+For an example of the JSON POST format, check [json_post_test_good.sh](https://github.com/dminear/easy-touch-raspberry-pi/blob/master/src/030_pool_app/test/json_post_test_good.sh)
+ in the test folder.
