@@ -176,7 +176,7 @@ class serialThread (threading.Thread):
 					
 					# now form packet
 					# 0x31 is wireless address
-					header = [ 0xFF, 0xFF, 0x00, 0xFF, 0xA5, 0x31, 0x10, 0x20 ]
+					header = [ 0xFF, 0x00, 0xFF, 0xA5, 0x31, 0x10, 0x20 ]
 					command = [ 0x86 ]
 					length = [ 0x02 ]
 					args = [ cmdchannel, nval ]
@@ -197,7 +197,7 @@ class serialThread (threading.Thread):
 						spat = int(num)
 						
 					# now form packet
-					header = [ 0xFF, 0xFF, 0x00, 0xFF, 0xA5, 0x07, 0x10, 0x20 ]
+					header = [ 0xFF, 0x00, 0xFF, 0xA5, 0x07, 0x10, 0x20 ]
 					command = [ 0x88, 0x04, poolt, spat, 0x05, 0x00 ]
 					output = header + command
 					self.sendPacket( output )
@@ -208,7 +208,7 @@ class serialThread (threading.Thread):
 	def sendPacket( self, output ):
 		# compute checksum
 		chksum = 0
-		for i in range(4,len(output)):
+		for i in range(3,len(output)):
 			chksum += output[i]
 		chkhi = int(chksum / 256)
 		chklo = int(chksum % 256)
