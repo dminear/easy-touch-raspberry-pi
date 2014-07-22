@@ -37,7 +37,7 @@ for k in circuits.keys():
 # switch to DEBUG for packet level byte data (but then that writes to the SD
 # card so do not keep it there in normal operation
 
-logging.basicConfig( filename='main.log', level=logging.INFO)
+logging.basicConfig( filename='main.log', level=logging.DEBUG )
 
 # pass the circuits to the serial thread for decoding and stuffing
 # in the redis database

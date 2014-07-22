@@ -7,7 +7,7 @@ import json
 import time
 from python_example import StatsdClient
 
-gSendStats = True
+gSendStats = False   #  djm True
 statsServer = "192.168.1.2"
 statsPort = 8125
 

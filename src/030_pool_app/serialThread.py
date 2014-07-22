@@ -22,7 +22,7 @@ cmdLock = threading.Lock()
 cmdQueue = Queue.Queue(10)
 
 
-gSendStats = True
+gSendStats = False   # djm True
 statsServer = "192.168.1.2"
 statsPort = 8125
 
@@ -73,7 +73,7 @@ class serialThread (threading.Thread):
 		self.p2 = p2
 		self.exit = False
 		threading.Thread.__init__(self)
-		logging.basicConfig( filename="serial.log", level=logging.DEBUG )
+		# logging.basicConfig( filename="serial.log", level=logging.DEBUG )
 		if gSendStats == True:
                         self.statsclient = StatsdClient( statsServer, statsPort )
                 else:
@@ -175,7 +175,8 @@ class serialThread (threading.Thread):
 					cmdchannel = remotebuttonmap[int(num)]
 					
 					# now form packet
-					header = [ 0xFF, 0xFF, 0x00, 0xFF, 0xA5, 0x07, 0x10, 0x20 ]
+					# 0x31 is wireless address
+					header = [ 0xFF, 0xFF, 0x00, 0xFF, 0xA5, 0x31, 0x10, 0x20 ]
 					command = [ 0x86 ]
 					length = [ 0x02 ]
 					args = [ cmdchannel, nval ]
