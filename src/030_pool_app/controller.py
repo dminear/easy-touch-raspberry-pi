@@ -7,8 +7,8 @@ import json
 import time
 from python_example import StatsdClient
 
-gSendStats = False   #  djm True
-statsServer = "192.168.1.2"
+gSendStats = True   #  djm True
+statsServer = "stats.minear.homeunix.com"
 statsPort = 8125
 
 class controller(object):

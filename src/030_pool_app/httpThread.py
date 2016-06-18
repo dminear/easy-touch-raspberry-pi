@@ -153,13 +153,14 @@ class httpThread (threading.Thread):
 		threading.Thread.__init__(self)
 
 	def stop(self):
-		#self.serv.server_close()
 		self.exit = True
 
 	def run(self):
 		os.chdir('web')
-		serv = BaseHTTPServer.HTTPServer( servAddr, httpServHandler )
+		self.serv = BaseHTTPServer.HTTPServer( servAddr, httpServHandler )
 		while self.exit == False:
-			serv.serve_forever()
+			# self.serv.serve_forever()
+			self.serv.handle_request()
+		self.serv.server_close()
 
 

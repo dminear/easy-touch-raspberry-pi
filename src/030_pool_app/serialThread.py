@@ -22,8 +22,8 @@ cmdLock = threading.Lock()
 cmdQueue = Queue.Queue(10)
 
 
-gSendStats = False   # djm True
-statsServer = "192.168.1.2"
+gSendStats = True   # djm True
+statsServer = "stats.minear.homeunix.com"
 statsPort = 8125
 
 
@@ -197,7 +197,7 @@ class serialThread (threading.Thread):
 						spat = int(num)
 						
 					# now form packet
-					header = [ 0xFF, 0x00, 0xFF, 0xA5, 0x07, 0x10, 0x20 ]
+					header = [ 0xFF, 0x00, 0xFF, 0xA5, 0x31, 0x10, 0x20 ]
 					command = [ 0x88, 0x04, poolt, spat, 0x05, 0x00 ]
 					output = header + command
 					self.sendPacket( output )

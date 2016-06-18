@@ -7,6 +7,8 @@ import sys
 import circuit
 import controller
 import logging
+import signal
+import redis
 
 # set up circuits
 # I just guessed at circuit number; it is really a label tied to byte/bit
@@ -33,11 +35,19 @@ for k in circuits.keys():
 						0
 						))
 
+bExit = False
+
+def sigint_handler(signum, frame):
+	global bExit
+	# clean up and stop threads
+	print "CTRL-C pressed, cleaning up"
+	bExit = True
 
 # switch to DEBUG for packet level byte data (but then that writes to the SD
 # card so do not keep it there in normal operation
 
-logging.basicConfig( filename='main.log', level=logging.DEBUG )
+#logging.basicConfig( filename='debug.log', level=logging.DEBUG )
+logging.basicConfig( filename='debug.log', level=logging.INFO )
 
 # pass the circuits to the serial thread for decoding and stuffing
 # in the redis database
@@ -51,32 +61,30 @@ serialT.start()
 httpT.start()
 cmdT.start()
 
-bExit = False
-print "Type CTRL-z to background, then kill the job to exit. This is usually 'kill %1'"
+print "Type CTRL-C to quit..."
 
-line = ''
+signal.signal(signal.SIGINT, sigint_handler)
+
+#line = ''
 
 while not bExit:
-	try: 
-		line = sys.stdin.readline().strip()
-
-		if line[0:4] == "exit":
-			bExit = True
-
-	except:
-		bExit=True
-	
-	if line:	
-		print line
-
 	time.sleep(1)
 
-# clean up and stop threads
-serialT.stop()
+print "Stopping tasks"
 cmdT.stop()
 httpT.stop()
+serialT.stop()
+
+# send a redis publish to kick cmdT
+redis = redis.StrictRedis( host='localhost', port=6379, db=0)
+redis.publish("poolcmd", "EXIT" )
+
+print "Joining serial task..."
 serialT.join()
+print "Joining command task..."
 cmdT.join()
+print "Joining http task..."
 httpT.join()
 
-print "Exiting main"
+print "CTRL-C pressed, exiting (hopefully)"
+sys.exit(0)
