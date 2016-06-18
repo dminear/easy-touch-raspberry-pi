@@ -61,7 +61,7 @@ I am starting to understand Python a little bit better and how modules are defin
 
 ### 2014-06-14
 
-Put together the outline of the commanding and threading tasks. So far, there is a serial thread that decodes the status messages and stores them to a redis database as a redis hash. It also listens to a command queue for command messages. I still have to implement the commands.  These commands are put into the command queue by another thread that is a redis subscriber. The third thread is the http thread that will respond to queuies. If a request is posted (still to be implemented) from the http thread, it will be published to the redis queue, where it will be forwarded on to the serial thread.  The purpose for all this is that the redis subscriber is a blocking call, so that is why we use the Queue between the threads.
+Put together the outline of the commanding and threading tasks. So far, there is a serial thread that decodes the status messages and stores them to a redis database as a redis hash. It also listens to a command queue for command messages. I still have to implement the commands.  These commands are put into the command queue by another thread that is a redis subscriber. The third thread is the http thread that will respond to queuies. If a request is posted (still to be implemented) from the http thread, it will be published to the redis queue, where it will be forwarded on to the serial thread.  The purpose for all this is that the redis subscriber is a blocking call, so that is why we use the Queue between the threads. - 2016-06-17 I think redis has non blocking methods in it so I should have looked at non-blocking subscriber calls if there are any.
 
 All the structure is in place, and the http thread is sending NOP messages once a second. The serial thread sees these and sometimes has to process multiple messages because it is waiting for 50 serial bytes to come in before it begins processing.
 
@@ -77,7 +77,7 @@ which is usually
 
     kill %1
 
-It would be nice to find a way for the HTTPServer to stop.
+It would be nice to find a way for the HTTPServer to stop.  - 2016-06-17 Finally cleaned this mess up.  CTRL-C now informs the other threads to end, and a dummy message is published to redis so the blocking call will get a message, then check the exit status, and end.
 
 ### 2014-06-18
 
@@ -106,4 +106,8 @@ from the src/030_pool_app directory. You can then run
     check_hash.py
 
 and look for the link underneath "password".  That is the md5 hash (without the quotes) to use as the token in the PUT response from the form or JSON message.
+
+### 2016-06-16
+
+Cleaned up the program termination code so it now exits when CTRL-C is pressed. There seem to be some packets from the pool controller and the outside oddball HTML requests that kill the system. Still waiting for them to come in again so I can understand why python croaks.
 
