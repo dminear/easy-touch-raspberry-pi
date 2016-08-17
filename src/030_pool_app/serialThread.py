@@ -23,7 +23,8 @@ cmdQueue = Queue.Queue(10)
 
 
 gSendStats = True   # djm True
-statsServer = "stats.minear.homeunix.com"
+#statsServer = "stats.minear.homeunix.com"
+statsServer = "192.168.0.30"
 statsPort = 8125
 
 
@@ -176,7 +177,8 @@ class serialThread (threading.Thread):
 					
 					# now form packet
 					# 0x31 is wireless address
-					header = [ 0xFF, 0x00, 0xFF, 0xA5, 0x31, 0x10, 0x20 ]
+					#header = [ 0xFF, 0x00, 0xFF, 0xA5, 0x31, 0x10, 0x20 ]
+					header = [ 0xFF, 0x00, 0xFF, 0xA5, 0x13, 0x10, 0x20 ]
 					command = [ 0x86 ]
 					length = [ 0x02 ]
 					args = [ cmdchannel, nval ]
