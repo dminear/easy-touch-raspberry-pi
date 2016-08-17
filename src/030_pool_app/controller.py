@@ -22,12 +22,26 @@ class controller(object):
 		self.oldhash = 1
 		self.responsestart = 0
 		self.responseflag = False
+		self.pooltime = "00:00"
+		self.walltime = "00:00"
 		self.r = redis.StrictRedis( host='localhost', port=6379, db=0)
 		self.password = ''
 		if gSendStats == True:
 			self.statsclient = StatsdClient( statsServer, statsPort )
 		else:
 			self.statsclient = None
+
+	def getwallclocktime( self ):
+		return self.walltime
+
+	def getpoolclocktime( self ):
+		return self.pooltime
+
+	def setwallclocktime( self, t ):
+		self.walltime = t
+
+	def setpoolclocktime( self, t ):
+		self.pooltime = t
 
 	def setResponseStart( self, t ):
 		self.responsestart = t
@@ -135,6 +149,8 @@ class controller(object):
 			d["spasettemp"] = self.spasettemp
 			d["poolsettemp"] = self.poolsettemp
 			d["hash"] = self.hash
+			d["pooltime"] = self.pooltime
+			d["walltime"] = self.walltime
 			# pool is the redis hash key, so you can do a 
 			# redis-cli hgetall pool
 			# to see all the data stored in redis
@@ -151,6 +167,10 @@ class controller(object):
 		for k in d.keys():
 			if k == "hash":
 				self.hash = d[k]
+			elif k == "pooltime":
+				self.pooltime = d[k]
+			elif k == "walltime":
+				self.walltime = d[k]
 			elif k == "airtemp":
 				self.airtemp = d[k]
 			elif k == "watertemp":

@@ -52,16 +52,9 @@ except:		# json not defined, give a text/html response
 			val = ""
 		print( '<span><input type="checkbox" name="circuit%s" value="1" %s>%s</span></br>' % ( c.getNumber(), val, c.getName().capitalize() ))
 	print '<span>Token: <input type="text" size="32" name="token"></span></br>'
+	print '<span>Wall time %s, Pool time %s</span></br>' % (httpcontroller.getwallclocktime(), httpcontroller.getpoolclocktime())
 	print '<input type="submit" value="Submit"> </form>'
 
 	#print '<script> $( "#slider" ).slider(); </script>'
 
-	'''
-	print ' <hr>'
-	print 'Air temp is %d</br>' % ( int(httpcontroller.getairtemp()))
-	print 'Water temp is %d</br>' % ( int(httpcontroller.getwatertemp()))
-	state = ['OFF', 'ON']
-	for c in cl:
-		print "%s circuit %s is %s</br>" % (c.getName(), c.getNumber(), state[int(c.getState())])
-'''
 	print '</body></html>'

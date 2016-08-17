@@ -46,6 +46,7 @@ remotebuttonmap = {
 class cmdThread (threading.Thread):
 	def __init__(self):
 		self.exit = False
+		self.wirelessaddr = 0x10	# some number
 		self.r = redis.StrictRedis( host='localhost', port=6379, db=0)
 		self.ps = self.r.pubsub()
 		self.ps.subscribe(['poolcmd'])
@@ -176,9 +177,8 @@ class serialThread (threading.Thread):
 					cmdchannel = remotebuttonmap[int(num)]
 					
 					# now form packet
-					# 0x31 is wireless address
-					#header = [ 0xFF, 0x00, 0xFF, 0xA5, 0x31, 0x10, 0x20 ]
-					header = [ 0xFF, 0x00, 0xFF, 0xA5, 0x13, 0x10, 0x20 ]
+					# wireless address is learned from status message
+					header = [ 0xFF, 0x00, 0xFF, 0xA5, self.wirelessaddr, 0x10, 0x20 ]
 					command = [ 0x86 ]
 					length = [ 0x02 ]
 					args = [ cmdchannel, nval ]
@@ -244,6 +244,7 @@ class serialThread (threading.Thread):
                                 self.statsclient.count( "pool.shortmsg", 1 )
 			return
 				
+		wirelessaddr = message[4]
 		dest = message[5]
 		src = message[6]
 		cmd = message[7]
@@ -267,6 +268,8 @@ class serialThread (threading.Thread):
 
 		# print out messages we are interested in
 		if (dest == 0x0f or dest == 0x20) or src == 0x20:
+			self.wirelessaddr = wirelessaddr
+			logging.debug( "wireless addr is %02x" % wirelessaddr );
 			f = ''
 			for y in range(length+9+2):
 				f +=  "%02x " % message[y] 
@@ -309,7 +312,11 @@ class serialThread (threading.Thread):
 
 			t=time.localtime()
 			localtime = time.strftime("%H:%M",t)
-			logging.debug( "  Wallclock %s, Pool Time %02d:%02d" % (localtime, data[clockHours], data[clockMinutes]))
+			pooltime = "%02d:%02d" % (data[clockHours], data[clockMinutes])
+			logging.debug( "  Wallclock %s, Pool Time %s" % (localtime, pooltime))
+			self.controller.setwallclocktime( localtime )
+			self.controller.setpoolclocktime( pooltime )
+	
 			#print "  Air %s, Water %s" % (data[airTemp], data[waterTemp])
 			#print "  Heater Temperature: ",data[heaterTemp]
 
