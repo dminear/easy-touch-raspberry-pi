@@ -140,7 +140,11 @@ class StatsdClient(object):
         >>> StatsdClient.send({"example.send":"11|c"}, ("127.0.0.1", 8125))
         """
         # TODO(rbtz@): IPv6 support
+        # djm done in init now -- udp_sock = socket(AF_INET, SOCK_DGRAM)
         udp_sock = socket(AF_INET, SOCK_DGRAM)
         # TODO(rbtz@): Add batch support
         for item in _dict.items():
-            udp_sock.sendto(":".join(item).encode('utf-8'), addr)
+            try:
+                udp_sock.sendto(":".join(item).encode('utf-8'), addr)
+            except:
+                print "socket problem"
