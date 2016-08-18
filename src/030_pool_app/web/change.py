@@ -15,7 +15,7 @@ httpr = redis.StrictRedis( host='localhost', port=6379, db=0)
 # jquery is available at /js/jquery.js
 
 if 'method' in globals() and method == 'GET':
-	print '["Invalid GET request. You need to POST."]'
+	print '["status":"Invalid GET request. You need to POST."]'
 else:
 	# check for json POST
 	if 'json' in globals():
@@ -94,12 +94,12 @@ else:
 	if updatecontroller.getpassword() != httpcontroller.getpassword():
 		# failed, return bad response
 		if json == 1:
-			print '["failed"]'
+			print '["status":"failed"]'
 		else:
 			print '<html><head><title>Failed</title></head><body><p>update failed</p><a href="/">Back to status</a></body></html>'
 	else:	# good password	
 		if json == 1:
-			print '["success"]'
+			print '["status":"success"]'
 		else:
 			print '<html><head><title>Response</title></head><body><p>update success</p><a href="/">Back to status</a></body></html>'
 			
