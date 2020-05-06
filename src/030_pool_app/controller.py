@@ -50,7 +50,7 @@ class controller(object):
 		self.responseflag = f
 
 	def setpassword( self, pw):
-		self.password = pw
+		self.password = pw.strip().lower()
 
 	def getpassword( self ):
 		return self.password
