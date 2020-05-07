@@ -8,7 +8,8 @@ import time
 from python_example import StatsdClient
 
 gSendStats = True   #  djm True
-statsServer = "stats.minear.homeunix.com"
+#statsServer = "ops.scrappintwins.com"
+statsServer = "192.168.0.30"
 statsPort = 8125
 
 class controller(object):
