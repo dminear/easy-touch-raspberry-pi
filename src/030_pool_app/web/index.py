@@ -33,6 +33,7 @@ except:		# json not defined, give a text/html response
 	#print '<link rel="stylesheet" href="js/jquery-ui.css">'
 	#print '<script src="js/jquery.js"></script>'
 	#print '<script src="js/jquery-ui.js"></script>'
+	print '<script src="js/md5.js"></script>'
 	print '</head> <body>'
 
 	print '<form name="input" method="post" action="change.py">'
