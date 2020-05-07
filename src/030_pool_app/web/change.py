@@ -91,8 +91,7 @@ else:
 				a = 1
 
 	# check passwords
-	#if updatecontroller.getpassword() != httpcontroller.getpassword():
-	if updatecontroller.getpassword() !=  "abc123xyz":
+	if updatecontroller.getpassword() != httpcontroller.getpassword():
 		# failed, return bad response
 		if json == 1:
 			print '["status":"failed"]'
