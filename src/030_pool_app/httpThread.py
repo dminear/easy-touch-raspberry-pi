@@ -7,7 +7,7 @@ import sys
 import os.path
 import os
 
-servAddr = ('', 8000)
+servAddr = ('', 80)
 
 mimedict = { 	"js" : "application/javascript",
 		"txt" : "text/plain",
